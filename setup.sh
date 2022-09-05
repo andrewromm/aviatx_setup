@@ -174,6 +174,34 @@ request_hostalias(){
   whiptailInput "HOSTALIAS" "Short hostname" "Shot server hostname that you can see at command line prompt." 8 78
 }
 
+update_reboot_dialog(){
+  show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
+}
+
+################################################################################
+## Actions
+################################################################################
+
+ANS_PY="-e ansible_python_interpreter=/usr/bin/python3"
+ANS_BRANCH="-e branch=${BOOTSTRAP_BRANCH}"
+
+run_platform_playbook() { # (tags, custom)
+  setup_playbook
+  print_status "Starting ansible"
+  cmd="platform.yml --connection=local --tags=${1} $ANS_PY $ANS_BRANCH ${2}"
+  echo "executing ansible-playbook ${cmd}"
+  ansible-playbook $cmd
+  if [ $? -eq 0 ]; then print_status "Done"; else print_error "FAILED"; exit 1; fi
+  greate_success_dialog
+}
+
+run_upgrade_playbook() {
+  print_status "Starting ansible"
+  ansible-playbook os_upgrade.yml --connection=local $ANS_PY && exit 0
+  if [ $? -eq 0 ]; then print_status "Done"; else print_error "FAILED"; exit 1; fi
+  # server shold be go to reboot
+}
+
 ################################################################################
 ## Configs
 ################################################################################
