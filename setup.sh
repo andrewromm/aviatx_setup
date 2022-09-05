@@ -175,6 +175,7 @@ setup_platform(){
 update_platform(){
   # update_bootstrap
   # setup_runner
+  return
 }
 
 initialize(){
