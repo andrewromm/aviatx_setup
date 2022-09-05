@@ -160,6 +160,23 @@ installed=${INSTALLED}""" > $FACT_CONF
 ## Executing
 ################################################################################
 
+setup_platform(){
+  # setup_langvars
+  # update_apt_repo
+  # setup_system_packages
+  # setup_locale
+  # update_bootstrap
+  # setup_python_packages
+  # setup_runner
+  INSTALLED=$VERSION
+  save_config
+}
+
+update_platform(){
+  # update_bootstrap
+  # setup_runner
+}
+
 initialize(){
   while [ -z "${DOMAIN// }" ]; do request_domain
   done
