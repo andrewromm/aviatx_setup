@@ -232,8 +232,20 @@ load_config(){
   fi
 }
 
+save_inventory(){
+  cd "$BOOTSTRAP_DIR"
+  echo """
+[private]
+${HOSTALIAS} ansible_host=${DOMAIN}
+
+[rockstat]
+${HOSTALIAS}
+""" > inventory/private
+}
+
 save_config(){
-  mkdir -p $(dirname $FACT_CONF) \
+  save_inventory \
+  && mkdir -p $(dirname $FACT_CONF) \
   && echo """[general]
 domain=${DOMAIN}
 hostalias=${HOSTALIAS}
