@@ -127,6 +127,23 @@ update_apt_repo(){
     && print_ok
 }
 
+setup_system_packages() {
+  export DEBIAN_FRONTEND=noninteractive
+  print_status "Installing requirements"
+  apt-get -yqq install apt-utils > $INSTALL_LOG \
+    && apt-get -yqq install dialog whiptail nano \
+      curl git locales \
+      python3 python3-dev python3-pip python3-netaddr python3-setuptools python3-requests \
+      build-essential libffi-dev ca-certificates zlib1g-dev libssl-dev openssl > $INSTALL_LOG \
+    && print_ok
+}
+
+setup_python_packages() {
+  print_status "Installing required python packages"
+  pip3 -q install wheel \
+    && pip3 -q install -r $BOOTSTRAP_DIR/requirements.txt -U \
+    && print_ok
+}
 
 ################################################################################
 ## Dialogs
@@ -230,10 +247,10 @@ installed=${INSTALLED}""" > $FACT_CONF
 setup_platform(){
   setup_langvars
   update_apt_repo
-  # setup_system_packages
+  setup_system_packages
   setup_locale
   update_bootstrap
-  # setup_python_packages
+  setup_python_packages
   # setup_runner
   INSTALLED=$VERSION
   save_config

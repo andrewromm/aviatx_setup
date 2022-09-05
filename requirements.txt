@@ -1,0 +1,6 @@
+msgpack
+ansible
+cryptography
+passlib
+netaddr
+bumpversion
