@@ -2,8 +2,8 @@
 playbook_version: 3.10.3
 branch: master
 # system users
-_uid: 472
-_gid: 472
+_uid: root
+_gid: root
 # ########## emitting configuration ##########
 customs: "{{_customs|default({})}}"
 _local_config: "{{ (ansible_local.config|default({})).general|default({}) }}"
