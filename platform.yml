@@ -117,6 +117,12 @@
 
     ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
 
+    - name: Create docker-compose file
+      template:
+        src: "templates/docker-compose.yml.j2"
+        dest: "{{bootstrap_dir}}/docker-compose.yml"
+      tags: ['never', 'system', 'docker', 'full']
+
     - name: Tear down existing services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
