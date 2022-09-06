@@ -103,7 +103,7 @@
         dest: "{{envs_dir}}/.env.nuxtjs.prod"
       tags: ['never', 'system', 'docker', 'full']
 
-     - name: Set nginx proxy env variables
+    - name: Set nginx proxy env variables
       template:
         src: "templates/env_proxy.yml.j2"
         dest: "{{envs_dir}}/.env.proxy.prod"
