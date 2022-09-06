@@ -95,3 +95,4 @@
       template:
         src: "templates/env_django.yml.j2"
         dest: "{{envs_dir}}/.env.django.prod"
+      tags: ['never', 'system', 'docker', 'full']
