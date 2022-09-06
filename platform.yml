@@ -89,3 +89,9 @@
       pip:
         name: docker
       tags: ['never', 'system', 'docker', 'full']
+
+    ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
+    - name: Set env variables
+      template:
+        src: "templates/env_django.yml.j2"
+        dest: "{{envs_dir}}/.env.django.prod"

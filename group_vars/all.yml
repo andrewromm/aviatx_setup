@@ -9,6 +9,11 @@ customs: "{{_customs|default({})}}"
 _local_config: "{{ (ansible_local.config|default({})).general|default({}) }}"
 _tag: "{{ (branch == 'master')|ternary('latest', branch) }}"
 _email: "{{ email|default(_local_config.email|default('hello@example.com'))}}"
+_frontend_port: "3000"
+_backend_port: "8000"
+_backend_debug: no
+_backend_secret_key: "b#5wk1l%3yf(3mab)qkp4^6x$(+&y1hri#c@7scl#k*j%skfj#"
+_celery_broker: "redis://redis:6379/0"
 # ########## Features ##########
 setup_server: yes
 # ########## Domains ##########
@@ -17,8 +22,9 @@ _domain: "{{_local_config.domain|default(ansible_host)}}"
 home_dir: '/srv/platform'
 backend_dir: '{{home_dir}}/backend'
 frontend_dir: '{{home_dir}}/frontend'
+envs_dir: '{{home_dir}}/envs'
 create_dirs:
-  - ["{{ backend_dir }}", "{{ frontend_dir }}", ]
+  - ["{{ backend_dir }}", "{{ frontend_dir }}", "{{ envs_dir }}", ]
 # ########## ssh key ##########
 _ssh_key: '/srv/aviatx/ssh/aviatx_rsa'
 # ########## repos ##########
@@ -26,3 +32,5 @@ _git_organization: git@github.com:andrewromm
 repos:
   frontend: "{{_git_organization}}/mtx_truc_front_v2.git"
   backend: "{{_git_organization}}/mtx_trac_backend.git"
+# ########## ssl ##########
+_letsencrypt_test: yes
