@@ -1,0 +1,35 @@
+---
+- name: Installing platform
+  hosts: aviatx
+  become: yes
+  tasks:
+
+    - debug:
+        msg: 
+          domain: "{{_domain}}"
+      tags: ["full"]
+      # tags: ["never"]
+
+    #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### ##### 
+
+    - name: Checking python version is 3
+      assert:
+        that: 
+          - "ansible_python_interpreter == '/usr/bin/python3'"
+        msg: "Required python 3. Details: https://docs.ansible.com/ansible/latest/reference_appendices/python_3_support.html"
+      tags: ["always"]
+
+    - name: Build and set permissions for required dirs
+      block:
+      - name: Creating directories
+        command: "mkdir -p {{ block_dirs }}"
+        args:
+          warn: False
+
+      - name: Setting permissions
+        command: "chown {{_uid}}:{{_gid}} {{ block_dirs }}"
+        args:
+          warn: False
+      vars:
+        block_dirs: "{{ create_dirs|flatten|join(' ') }}"
+      tags: ["never", "full", "platform", "dirs"]

@@ -205,6 +205,14 @@ update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
 
+greate_success_dialog(){
+  show_dialog "Execution completed" "Greate success!"
+}
+
+run_full_setup_to_apply_dialog(){
+  show_dialog "Applying changes" "Run full install/upgrade to apply changes"
+}
+
 ################################################################################
 ## Actions
 ################################################################################
@@ -213,7 +221,6 @@ ANS_PY="-e ansible_python_interpreter=/usr/bin/python3"
 ANS_BRANCH="-e branch=${BOOTSTRAP_BRANCH}"
 
 run_platform_playbook() { # (tags, custom)
-  setup_playbook
   print_status "Starting ansible"
   cmd="platform.yml --connection=local --tags=${1} $ANS_PY $ANS_BRANCH ${2}"
   echo "executing ansible-playbook ${cmd}"
