@@ -10,6 +10,7 @@ FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 
 # state vars
+SSH_KEY=""
 DOMAIN=""
 INSTALLED=""
 DEF_HOSTALIAS="aviatx"
@@ -201,6 +202,10 @@ request_hostalias(){
   whiptailInput "HOSTALIAS" "Short hostname" "Shot server hostname that you can see at command line prompt." 8 78
 }
 
+request_ssh(){
+  whiptailInput "SSH_KEY" "SSH key" "Please enter ssh private key for git repos." 8 78
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -243,6 +248,7 @@ run_upgrade_playbook() {
 load_config(){
   if [ -a "$FACT_CONF" ]; then
     INSTALLED=$(awk -F "=" '/installed/ {print $2}' $FACT_CONF)
+    SSH_KEY=$(awk -F "=" '/ssh_key/ {print $2}' $FACT_CONF)
     DOMAIN=$(awk -F "=" '/domain/ {print $2}' $FACT_CONF)
     HOSTALIAS=$(awk -F "=" '/hostalias/ {print $2}' $FACT_CONF)
     if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
@@ -264,6 +270,7 @@ save_config(){
   save_inventory \
   && mkdir -p $(dirname $FACT_CONF) \
   && echo """[general]
+ssh_key=${SSH_KEY}
 domain=${DOMAIN}
 hostalias=${HOSTALIAS}
 installed=${INSTALLED}""" > $FACT_CONF
@@ -291,6 +298,8 @@ update_platform(){
 }
 
 initialize(){
+  while [ -z "${SSH_KEY// }"]; do request_ssh
+  done
   while [ -z "${DOMAIN// }" ]; do request_domain
   done
   while [ -z ${HOSTALIAS// } ]; do request_hostalias
@@ -313,6 +322,7 @@ menu() {
   # --menu <text> <height> <width> <listheight>
   OPTION=$(whiptail --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
   "01" "    Upgrade OS" \
+  "02" "    Change SSH key" \
   "03" "    Full Install/Upgrade" \
   "04" "    Platform Upgrade" \
   "12" "    Change domain '${DOMAIN}'" \
@@ -325,6 +335,7 @@ menu() {
 
   case "$OPTION" in
     "01") update_reboot_dialog; run_upgrade_playbook ;;
+    "02") request_ssh ;;
     "03") run_platform_playbook full ;;
     "04") run_platform_playbook pservice,ppart ;;
     "12") request_domain ;;

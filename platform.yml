@@ -33,3 +33,5 @@
       vars:
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
       tags: ["never", "full", "platform", "dirs"]
+
+    ##### ##### ##### ##### #####    Server configuration    ##### ##### ##### ##### ##### 
