@@ -45,4 +45,5 @@
         # accept_hostkey: no
         key_file: '{{_ssh_key}}'
         dest: '{{backend_dir}}'
+        update: no
       tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
