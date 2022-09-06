@@ -99,10 +99,10 @@
       docker_volume:
         name: media_volume
         driver: local
-          driver_options:
-            type: none
-            device: "{{media_dir}}"
-            o: bind
+        driver_options:
+          type: none
+          device: "{{media_dir}}"
+          o: bind
       tags: ['never', 'system', 'docker', 'full']
 
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
