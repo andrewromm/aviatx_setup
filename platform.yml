@@ -90,6 +90,12 @@
         name: docker
       tags: ['never', 'system', 'docker', 'full']
 
+    - name: Install Docker Compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: u+x,g+x,o+x
+
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
 
     - name: Set backend env variables
