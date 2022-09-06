@@ -95,4 +95,10 @@
       template:
         src: "templates/env_django.yml.j2"
         dest: "{{envs_dir}}/.env.django.prod"
+      template:
+        src: "templates/env_nuxtjs.yml.j2"
+        dest: "{{envs_dir}}/.env.nuxtjs.prod"
+      template:
+        src: "templates/env_proxy.yml.j2"
+        dest: "{{envs_dir}}/.env.proxy.prod"
       tags: ['never', 'system', 'docker', 'full']

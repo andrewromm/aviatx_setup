@@ -1,7 +1,7 @@
-DEBUG: {{_backend_debug}}
-SECRET_KEY: {{_backend_secret_key}}
-DJANGO_ALLOWED_HOSTS: {{_domain}} 
-VIRTUAL_HOST: {{_domain}}
-VIRTUAL_PORT: {{_backend_port}}
+DEBUG={{_backend_debug}}
+SECRET_KEY={{_backend_secret_key}}
+DJANGO_ALLOWED_HOSTS={{_domain}} 
+VIRTUAL_HOST={{_domain}}
+VIRTUAL_PORT={{_backend_port}}
 VIRTUAL_PATH=~^/(admin|api)/
-CELERY_BROKER: {{_celery_broker}}
+CELERY_BROKER={{_celery_broker}}

@@ -11,7 +11,7 @@ _tag: "{{ (branch == 'master')|ternary('latest', branch) }}"
 _email: "{{ email|default(_local_config.email|default('hello@example.com'))}}"
 _frontend_port: "3000"
 _backend_port: "8000"
-_backend_debug: no
+_backend_debug: 0
 _backend_secret_key: "b#5wk1l%3yf(3mab)qkp4^6x$(+&y1hri#c@7scl#k*j%skfj#"
 _celery_broker: "redis://redis:6379/0"
 # ########## Features ##########
@@ -33,4 +33,4 @@ repos:
   frontend: "{{_git_organization}}/mtx_truc_front_v2.git"
   backend: "{{_git_organization}}/mtx_trac_backend.git"
 # ########## ssl ##########
-_letsencrypt_test: yes
+_letsencrypt_test: "true"
