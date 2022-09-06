@@ -136,5 +136,5 @@
       tags: ['never', 'system', 'docker', 'full']
 
     - debug:
-      var: output
+        var: output
       tags: ['never', 'system', 'docker', 'full']
