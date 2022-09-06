@@ -1,0 +1,22 @@
+# playbook version fill automatically
+playbook_version: 3.10.3
+branch: master
+# system users
+_uid: 472
+_gid: 472
+# ########## emitting configuration ##########
+customs: "{{_customs|default({})}}"
+_local_config: "{{ (ansible_local.config|default({})).general|default({}) }}"
+_tag: "{{ (branch == 'master')|ternary('latest', branch) }}"
+# ########## Domains ##########
+_domain: "{{_local_config.domain|default(ansible_host)}}"
+# ########## SSL ##########
+domains_ssl:
+  - email: '{{email}}'
+    domains: "{{[_domain] + _domains.values()|list|unique}}"
+# ########## dirs ##########
+home_dir: '/srv/platform'
+backend_dir: '{{home_dir}}/backend'
+frontend_dir: '{{home_dir}}/frontend'
+create_dirs:
+  - ["{{ backend_dir }}", "{{ frontend_dir }}", ]

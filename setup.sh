@@ -255,7 +255,7 @@ save_inventory(){
 [private]
 ${HOSTALIAS} ansible_host=${DOMAIN}
 
-[rockstat]
+[aviatx]
 ${HOSTALIAS}
 """ > inventory/private
 }
