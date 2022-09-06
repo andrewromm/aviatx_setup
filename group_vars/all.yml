@@ -19,7 +19,8 @@ setup_server: yes
 # ########## Domains ##########
 _domain: "{{_local_config.domain|default(ansible_host)}}"
 # ########## dirs ##########
-home_dir: '/srv/platform'
+bootstrap_dir: '/srv/aviatx/bootstrap'
+home_dir: '/srv/aviatx/platform'
 backend_dir: '{{home_dir}}/backend'
 frontend_dir: '{{home_dir}}/frontend'
 envs_dir: '{{home_dir}}/envs'

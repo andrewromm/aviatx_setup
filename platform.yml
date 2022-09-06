@@ -91,6 +91,7 @@
       tags: ['never', 'system', 'docker', 'full']
 
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
+
     - name: Set backend env variables
       template:
         src: "templates/env_django.yml.j2"
@@ -108,3 +109,10 @@
         src: "templates/env_proxy.yml.j2"
         dest: "{{envs_dir}}/.env.proxy.prod"
       tags: ['never', 'system', 'docker', 'full']
+
+    ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
+
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: "{{bootstrap_dir}}"
+        state: absent
