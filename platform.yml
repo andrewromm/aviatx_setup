@@ -43,5 +43,5 @@
         force: yes
         accept_hostkey: yes
         key_file: '{{_ssh_key}}'
-        dest: '{{dirs.backend_dir}}'
+        dest: '{{backend_dir}}'
       tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
