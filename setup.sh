@@ -298,10 +298,10 @@ initialize(){
   print_status "Checking SSH key"
   if test -f "$SSH_DIR/$SSH_FILE"; 
   then
-    print_ok "SSH key exists."
+    print_ok "SSH key exists.";
   else
-    print_error "Upload SSH key to $SSH_DIR"
-    break
+    print_error "Upload SSH key to $SSH_DIR";
+    exit 1;
   fi
   #########################
   while [ -z "${DOMAIN// }" ]; do request_domain
