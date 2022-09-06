@@ -40,8 +40,9 @@
       git:
         repo: '{{repos.backend}}'
         version: main
-        force: yes
-        accept_hostkey: yes
+        clone: yes
+        # force: yes
+        # accept_hostkey: no
         key_file: '{{_ssh_key}}'
         dest: '{{backend_dir}}'
       tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
