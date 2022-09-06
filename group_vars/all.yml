@@ -12,8 +12,6 @@ _tag: "{{ (branch == 'master')|ternary('latest', branch) }}"
 setup_server: yes
 # ########## Domains ##########
 _domain: "{{_local_config.domain|default(ansible_host)}}"
-# ########## Domains ##########
-_ssh_key: "{{_local_config.ssh_key}}"
 # ########## SSL ##########
 domains_ssl:
   - email: '{{email}}'
@@ -22,7 +20,6 @@ domains_ssl:
 home_dir: '/srv/platform'
 backend_dir: '{{home_dir}}/backend'
 frontend_dir: '{{home_dir}}/frontend'
-ssh_dir: '{{home_dir}}/ssh'
 create_dirs:
   - ["{{ backend_dir }}", "{{ frontend_dir }}", "{{ ssh_dir }}", ]
 # ########## repos ##########

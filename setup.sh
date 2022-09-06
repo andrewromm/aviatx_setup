@@ -4,13 +4,14 @@ VERSION=2.0.1
 BOOTSTRAP_BRANCH=${BRANCH:-master}
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
+SHH_DIR=/srv/aviatx/ssh
+SHH_FILE=aviatx_rsa
 KICKSTART_CMD="curl -s https://raw.githubusercontent.com/andrewromm/aviatx_setup/${BOOTSTRAP_BRANCH}/setup.sh | sudo -E bash -\n"
 BINALIAS=/usr/local/bin/aviatx
 FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 
 # state vars
-SSH_KEY=""
 DOMAIN=""
 INSTALLED=""
 DEF_HOSTALIAS="aviatx"
@@ -98,6 +99,7 @@ update_bootstrap() {
     cd $BOOTSTRAP_DIR
     echo $(pwd)
     git clone $BOOTSTRAP_REPO . && git checkout $BOOTSTRAP_BRANCH && print_ok
+    mkdir -p $SHH_DIR
   fi
 }
 
@@ -202,10 +204,6 @@ request_hostalias(){
   whiptailInput "HOSTALIAS" "Short hostname" "Shot server hostname that you can see at command line prompt." 8 78
 }
 
-request_ssh(){
-  whiptailInput "SSH_KEY" "SSH key" "Please enter ssh private key for git repos." 8 78
-}
-
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -248,7 +246,6 @@ run_upgrade_playbook() {
 load_config(){
   if [ -a "$FACT_CONF" ]; then
     INSTALLED=$(awk -F "=" '/installed/ {print $2}' $FACT_CONF)
-    SSH_KEY=$(awk -F "=" '/ssh_key/ {print $2}' $FACT_CONF)
     DOMAIN=$(awk -F "=" '/domain/ {print $2}' $FACT_CONF)
     HOSTALIAS=$(awk -F "=" '/hostalias/ {print $2}' $FACT_CONF)
     if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
@@ -270,7 +267,6 @@ save_config(){
   save_inventory \
   && mkdir -p $(dirname $FACT_CONF) \
   && echo """[general]
-ssh_key=${SSH_KEY}
 domain=${DOMAIN}
 hostalias=${HOSTALIAS}
 installed=${INSTALLED}""" > $FACT_CONF
@@ -298,8 +294,16 @@ update_platform(){
 }
 
 initialize(){
-  while [ -z "${SSH_KEY// }" ]; do request_ssh
-  done
+  # check if ssh_key exists
+  print_status "Checking SSH key"
+  if test -f "$SSH_DIR/$SSH_FILE"; 
+  then
+    print_ok "SSH key exists."
+  else
+    print_error "Upload SSH key to $SSH_DIR"
+    break
+  fi
+  #########################
   while [ -z "${DOMAIN// }" ]; do request_domain
   done
   while [ -z ${HOSTALIAS// } ]; do request_hostalias
@@ -322,7 +326,6 @@ menu() {
   # --menu <text> <height> <width> <listheight>
   OPTION=$(whiptail --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
   "01" "    Upgrade OS" \
-  "02" "    Change SSH key" \
   "03" "    Full Install/Upgrade" \
   "04" "    Platform Upgrade" \
   "12" "    Change domain '${DOMAIN}'" \
@@ -335,7 +338,6 @@ menu() {
 
   case "$OPTION" in
     "01") update_reboot_dialog; run_upgrade_playbook ;;
-    "02") request_ssh ;;
     "03") run_platform_playbook full ;;
     "04") run_platform_playbook pservice,ppart ;;
     "12") request_domain ;;
