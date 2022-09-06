@@ -12,8 +12,9 @@ FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 
 # state vars
-DOMAIN=""
 INSTALLED=""
+EMAIL=""
+DOMAIN=""
 DEF_HOSTALIAS="aviatx"
 HOSTALIAS="$DEF_HOSTALIAS"
 
@@ -204,6 +205,10 @@ request_hostalias(){
   whiptailInput "HOSTALIAS" "Short hostname" "Shot server hostname that you can see at command line prompt." 8 78
 }
 
+request_email(){
+  whiptailInput "EMAIL" "Email" "Email required for issuing letsencrypt SSL and GIT." 8 78
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -248,6 +253,7 @@ load_config(){
     INSTALLED=$(awk -F "=" '/installed/ {print $2}' $FACT_CONF)
     DOMAIN=$(awk -F "=" '/domain/ {print $2}' $FACT_CONF)
     HOSTALIAS=$(awk -F "=" '/hostalias/ {print $2}' $FACT_CONF)
+    EMAIL=$(awk -F "=" '/email/ {print $2}' $FACT_CONF)
     if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
 }
@@ -267,6 +273,7 @@ save_config(){
   save_inventory \
   && mkdir -p $(dirname $FACT_CONF) \
   && echo """[general]
+email=${EMAIL}
 domain=${DOMAIN}
 hostalias=${HOSTALIAS}
 installed=${INSTALLED}""" > $FACT_CONF
@@ -304,6 +311,8 @@ initialize(){
     exit 1;
   fi
   #########################
+  while [ -z "${EMAIL// }" ]; do request_email
+  done
   while [ -z "${DOMAIN// }" ]; do request_domain
   done
   while [ -z ${HOSTALIAS// } ]; do request_hostalias
@@ -330,6 +339,7 @@ menu() {
   "04" "    Platform Upgrade" \
   "12" "    Change domain '${DOMAIN}'" \
   "13" "    Change host alias '${HOSTALIAS}'" \
+  "14" "    Change Email '${EMAIL}'" \
   "00"  "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -342,6 +352,7 @@ menu() {
     "04") run_platform_playbook pservice,ppart ;;
     "12") request_domain ;;
     "13") request_hostalias ;;
+    "14") request_email ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac

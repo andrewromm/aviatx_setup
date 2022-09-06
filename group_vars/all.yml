@@ -8,14 +8,11 @@ _gid: 472
 customs: "{{_customs|default({})}}"
 _local_config: "{{ (ansible_local.config|default({})).general|default({}) }}"
 _tag: "{{ (branch == 'master')|ternary('latest', branch) }}"
+_email: "{{ email|default(_local_config.email|default('hello@example.com'))}}"
 # ########## Features ##########
 setup_server: yes
 # ########## Domains ##########
 _domain: "{{_local_config.domain|default(ansible_host)}}"
-# ########## SSL ##########
-domains_ssl:
-  - email: '{{email}}'
-    domains: "{{[_domain] + _domains.values()|list|unique}}"
 # ########## dirs ##########
 home_dir: '/srv/platform'
 backend_dir: '{{home_dir}}/backend'
