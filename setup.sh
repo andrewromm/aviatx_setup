@@ -298,7 +298,7 @@ update_platform(){
 }
 
 initialize(){
-  while [ -z "${SSH_KEY// }"]; do request_ssh
+  while [ -z "${SSH_KEY// }" ]; do request_ssh
   done
   while [ -z "${DOMAIN// }" ]; do request_domain
   done
