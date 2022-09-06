@@ -21,7 +21,7 @@ home_dir: '/srv/platform'
 backend_dir: '{{home_dir}}/backend'
 frontend_dir: '{{home_dir}}/frontend'
 create_dirs:
-  - ["{{ backend_dir }}", "{{ frontend_dir }}", "{{ ssh_dir }}", ]
+  - ["{{ backend_dir }}", "{{ frontend_dir }}", ]
 # ########## ssh key ##########
 _ssh_key: '/srv/aviatx/ssh/aviatx_rsa'
 # ########## repos ##########
