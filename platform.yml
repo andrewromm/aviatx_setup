@@ -95,6 +95,7 @@
         url: https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-linux-x86_64
         dest: /usr/local/bin/docker-compose
         mode: u+x,g+x,o+x
+      tags: ['never', 'system', 'docker', 'full']
 
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
 
