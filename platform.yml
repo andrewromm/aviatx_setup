@@ -47,3 +47,17 @@
         dest: '{{backend_dir}}'
         update: no
       tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
+
+    ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### ##### 
+
+    - name: Cloning Frontend
+      git:
+        repo: '{{repos.frontend}}'
+        version: main
+        clone: yes
+        # force: yes
+        # accept_hostkey: no
+        key_file: '{{_ssh_key}}'
+        dest: '{{frontend_dir}}'
+        update: no
+      tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
