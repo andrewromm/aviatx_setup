@@ -41,7 +41,7 @@
         repo: '{{repos.backend}}'
         version: main
         clone: yes
-        # force: yes
+        force: yes
         # accept_hostkey: no
         key_file: '{{_ssh_key}}'
         dest: '{{backend_dir}}'
@@ -56,7 +56,7 @@
         repo: '{{repos.frontend}}'
         version: main
         clone: yes
-        # force: yes
+        force: yes
         # accept_hostkey: no
         key_file: '{{_ssh_key}}'
         dest: '{{frontend_dir}}'
