@@ -46,6 +46,7 @@
         key_file: '{{_ssh_key}}'
         dest: '{{backend_dir}}'
         update: yes
+      become_user: "{{_uid}}"
       tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
 
     ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### ##### 
@@ -60,4 +61,5 @@
         key_file: '{{_ssh_key}}'
         dest: '{{frontend_dir}}'
         update: yes
+      become_user: "{{_uid}}"
       tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
