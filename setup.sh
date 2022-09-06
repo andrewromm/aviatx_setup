@@ -206,7 +206,7 @@ request_hostalias(){
 }
 
 request_email(){
-  whiptailInput "EMAIL" "Email" "Email required for issuing letsencrypt SSL and GIT." 8 78
+  whiptailInput "EMAIL" "Email" "Email required for issuing letsencrypt SSL." 8 78
 }
 
 update_reboot_dialog(){
