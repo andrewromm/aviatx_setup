@@ -116,3 +116,4 @@
       community.docker.docker_compose:
         project_src: "{{bootstrap_dir}}"
         state: absent
+      tags: ['never', 'system', 'docker', 'full']
