@@ -33,13 +33,6 @@
       vars:
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
       tags: ["never", "full", "platform", "dirs"]
-
-    ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
-    
-    - name: Copy SSH key
-      ansible.builtin.copy:
-        content: '{{ _ssh_key }}'
-        dest: '{{ ssh_dir }}/id_rsa'
     
     ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
 
@@ -49,6 +42,6 @@
         version: main
         force: yes
         accept_hostkey: yes
-        key_file: '{{ ssh_dir }}/id_rsa'
+        key_file: '{{_ssh_key}}'
         dest: '{{dirs.backend_dir}}'
       tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']

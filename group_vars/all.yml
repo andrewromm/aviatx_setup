@@ -22,6 +22,8 @@ backend_dir: '{{home_dir}}/backend'
 frontend_dir: '{{home_dir}}/frontend'
 create_dirs:
   - ["{{ backend_dir }}", "{{ frontend_dir }}", "{{ ssh_dir }}", ]
+# ########## ssh key ##########
+_ssh_key: '/srv/aviatx/ssh/aviatx_rsa'
 # ########## repos ##########
 _git_organization: https://github.com/andrewromm
 repos:
