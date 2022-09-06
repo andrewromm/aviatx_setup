@@ -90,6 +90,11 @@
         name: docker
       tags: ['never', 'system', 'docker', 'full']
 
+    - name: Install Docker Compose for Python
+      pip:
+        name: docker-compose
+      tags: ['never', 'system', 'docker', 'full']
+
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
 
     - name: Set backend env variables
