@@ -4,6 +4,8 @@ VERSION=2.0.1
 BOOTSTRAP_BRANCH=${BRANCH:-master}
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
+KICKSTART_CMD="curl -s https://raw.githubusercontent.com/andrewromm/aviatx_setup/${BOOTSTRAP_BRANCH}/setup.sh | sudo -E bash -\n"
+BINALIAS=/usr/local/bin/aviatx
 FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 
@@ -145,6 +147,14 @@ setup_python_packages() {
     && print_ok
 }
 
+setup_runner() {
+  print_status "Installing/Updating AviaTX shortcut"
+  rm -f $BINALIAS \
+    && echo -e "#!/usr/bin/env bash\n${KICKSTART_CMD}\n" > $BINALIAS \
+    && chmod +x $BINALIAS \
+    && print_ok
+}
+
 ################################################################################
 ## Dialogs
 ################################################################################
@@ -263,14 +273,14 @@ setup_platform(){
   setup_locale
   update_bootstrap
   setup_python_packages
-  # setup_runner
+  setup_runner
   INSTALLED=$VERSION
   save_config
 }
 
 update_platform(){
   update_bootstrap
-  # setup_runner
+  setup_runner
 }
 
 initialize(){
