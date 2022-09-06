@@ -34,4 +34,21 @@
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
       tags: ["never", "full", "platform", "dirs"]
 
-    ##### ##### ##### ##### #####    Server configuration    ##### ##### ##### ##### ##### 
+    ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
+    
+    - name: Copy SSH key
+      ansible.builtin.copy:
+        content: '{{ _ssh_key }}'
+        dest: '{{ ssh_dir }}/id_rsa'
+    
+    ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
+
+    - name: Cloning Backend
+      git:
+        repo: '{{repos.backend}}'
+        version: main
+        force: yes
+        accept_hostkey: yes
+        key_file: '{{ ssh_dir }}/id_rsa'
+        dest: '{{dirs.backend_dir}}'
+      tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
