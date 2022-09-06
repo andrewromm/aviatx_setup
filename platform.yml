@@ -95,6 +95,16 @@
         name: docker-compose
       tags: ['never', 'system', 'docker', 'full']
 
+    - name: Docker create media volume
+      docker_volume:
+        name: media_volume
+        driver: local
+          driver_options:
+            type: none
+            device: "{{media_dir}}"
+            o: bind
+      tags: ['never', 'system', 'docker', 'full']
+
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
 
     - name: Set backend env variables
