@@ -25,7 +25,7 @@ create_dirs:
 # ########## ssh key ##########
 _ssh_key: '/srv/aviatx/ssh/aviatx_rsa'
 # ########## repos ##########
-_git_organization: https://github.com/andrewromm
+_git_organization: git@github.com:andrewromm
 repos:
-  frontend: "{{_git_organization}}/mtx_truc_front_v2"
-  backend: "{{_git_organization}}/mtx_trac_backend"
+  frontend: "{{_git_organization}}/mtx_truc_front_v2.git"
+  backend: "{{_git_organization}}/mtx_trac_backend.git"
