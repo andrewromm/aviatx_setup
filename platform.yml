@@ -91,13 +91,19 @@
       tags: ['never', 'system', 'docker', 'full']
 
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
-    - name: Set env variables
+    - name: Set backend env variables
       template:
         src: "templates/env_django.yml.j2"
         dest: "{{envs_dir}}/.env.django.prod"
+      tags: ['never', 'system', 'docker', 'full']
+
+    - name: Set frontend env variables  
       template:
         src: "templates/env_nuxtjs.yml.j2"
         dest: "{{envs_dir}}/.env.nuxtjs.prod"
+      tags: ['never', 'system', 'docker', 'full']
+
+     - name: Set nginx proxy env variables
       template:
         src: "templates/env_proxy.yml.j2"
         dest: "{{envs_dir}}/.env.proxy.prod"
