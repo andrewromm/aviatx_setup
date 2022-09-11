@@ -145,8 +145,9 @@ setup_system_packages() {
 }
 
 setup_python_packages() {
-  print_status "Installing required python packages"
-  pip3 -q install wheel \
+  print_status "Update pip and install required python packages"
+  python3 -m pip install --upgrade pip \
+    && pip3 -q install wheel \
     && pip3 -q install -r $BOOTSTRAP_DIR/requirements.txt -U \
     && print_ok
 }
