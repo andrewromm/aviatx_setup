@@ -17,6 +17,25 @@ services:
     env_file:
       - {{envs_dir}}/.env.django.prod
 
+  redis:
+    container_name: redis
+    image: redis:alpine
+
+  celery:
+    container_name: celery
+    build: 
+        context: {{backend_dir}}
+        dockerfile: Dockerfile.prod
+    command: celery -A backend worker --loglevel=debug --concurrency=4 -l info
+    volumes:
+        - .:/usr/src/app
+        - ./db.sqlite3:/home/app/web/db.sqlite3
+    env_file:
+        - {{envs_dir}}/.env.django.prod
+    depends_on:
+        - django
+        - redis
+
 volumes:
   static_volume:
   media_volume:

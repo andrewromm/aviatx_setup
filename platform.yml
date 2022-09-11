@@ -137,11 +137,12 @@
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         state: absent
+        remove_images: all
       tags: ['never', 'system', 'docker', 'full']
 
     - name: Create and start services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
-      register: output
+        recreate: always
       tags: ['never', 'system', 'docker', 'full']
 
