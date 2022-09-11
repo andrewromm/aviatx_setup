@@ -36,11 +36,72 @@ services:
         - django
         - redis
 
+  celery-beat:
+    container_name: celery-beat
+    build: 
+        context: {{backend_dir}}
+        dockerfile: Dockerfile.prod
+    command: celery -A backend beat -l info
+    volumes:
+        - .:/usr/src/app
+        - {{fake_db_dir}}/db.sqlite3:/home/app/web/db.sqlite3
+    env_file:
+        - {{envs_dir}}/.env.django.prod
+    depends_on:
+        - django
+        - redis
+
+  nuxtjs:
+    container_name: frontend
+    build:
+      context: {{frontend_dir}}
+      dockerfile: Dockerfile.prod
+    command: npm start
+    restart: always
+    expose:
+      - 3000
+    env_file:
+      - {{envs_dir}}/.env.nuxtjs.prod
+    depends_on:
+      - django
+
+  nginx-proxy:
+    container_name: nginx-proxy
+    build: ./nginx
+    restart: always
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - 443:443
+      - 80:80
+    depends_on:
+      - nuxtjs
+
+  nginx-proxy-letsencrypt:
+    container_name: letsencrypt
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    env_file:
+      - {{envs_dir}}/.env.proxy.prod
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - acme:/etc/acme.sh
+    depends_on:
+      - nginx-proxy
+
 volumes:
   static_volume:
   media_volume:
     external: true
-  # certs:
-  # html:
-  # vhost:
-  # acme:
+  certs:
+  html:
+  vhost:
+  acme:
