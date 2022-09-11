@@ -4,3 +4,4 @@ cryptography
 passlib
 netaddr
 bumpversion
+pyopenssl
