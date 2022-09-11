@@ -145,6 +145,3 @@
       register: output
       tags: ['never', 'system', 'docker', 'full']
 
-    - debug:
-        var: output
-      tags: ['never', 'system', 'docker', 'full']
