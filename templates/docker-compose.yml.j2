@@ -67,7 +67,7 @@ services:
 
   nginx-proxy:
     container_name: nginx-proxy
-    build: ./nginx
+    build: {{bootstrap_dir}}/nginx
     restart: always
     volumes:
       - static_volume:/home/app/web/static
