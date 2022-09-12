@@ -131,6 +131,12 @@
         dest: "{{bootstrap_dir}}/nginx/Dockerfile"
       tags: ['never', 'system', 'docker', 'full']
 
+    - name: Copy nginx proxy config
+      template:
+        src: "nginx/vhost.d/custom.yml.j2"
+        dest: "{{bootstrap_dir}}/nginx/vhost.d/{{_domain}}"
+      tags: ['never', 'system', 'docker', 'full']
+
     ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
 
     - name: Create docker-compose file
