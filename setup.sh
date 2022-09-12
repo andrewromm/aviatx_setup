@@ -330,6 +330,10 @@ initialize(){
   done
   while [ -z "${DOMAIN// }" ]; do request_domain
   done
+  while [ -z "${PG_USER// }" ]; do request_pg_user
+  done
+  while [ -z "${PG_PASSWORD// }" ]; do request_pg_password
+  done
   while [ -z ${HOSTALIAS// } ]; do request_hostalias
   done
 }
@@ -350,8 +354,8 @@ menu() {
   # --menu <text> <height> <width> <listheight>
   OPTION=$(whiptail --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
   "01" "    Upgrade OS" \
-  "03" "    Full Install/Upgrade" \
-  "04" "    Platform Upgrade" \
+  "03" "    Full Install" \
+  "04" "    Upgrade" \
   "12" "    Change domain '${DOMAIN}'" \
   "13" "    Change host alias '${HOSTALIAS}'" \
   "14" "    Change Email '${EMAIL}'" \
