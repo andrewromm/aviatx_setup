@@ -155,6 +155,6 @@
     - name: Create and start services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
-        recreate: always
+        recreate: smart
       tags: ['never', 'system', 'docker', 'full']
 
