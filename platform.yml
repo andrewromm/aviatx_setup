@@ -128,7 +128,7 @@
     - name: Set nginx proxy dockerfile
       template:
         src: "nginx/Dockerfile.yml.j2"
-        dest: "{{bootstrap_dir}}/Dockerfile"
+        dest: "{{bootstrap_dir}}/nginx/Dockerfile"
       tags: ['never', 'system', 'docker', 'full']
 
     ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
