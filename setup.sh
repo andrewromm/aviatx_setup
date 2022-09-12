@@ -217,7 +217,7 @@ request_pg_user(){
 }
 
 request_pg_password(){
-  whiptailInput "PG_USER" "Postgres user" "Define postgreSQL password" 8 78
+  whiptailInput "PG_PASSWORD" "Postgres user" "Define postgreSQL password" 8 78
 }
 
 update_reboot_dialog(){
