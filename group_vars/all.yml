@@ -39,6 +39,6 @@ repos:
 # ########## ssl ##########
 _letsencrypt_test: "true"
 # ########## postgress ##########
-_pg: 1
+_pg: 0
 _pg_user: "{{_local_config.domain|default('user')}}"
 _pg_password: "{{_local_config.domain|default('password')}}"
