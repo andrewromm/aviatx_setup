@@ -125,6 +125,12 @@
         dest: "{{envs_dir}}/.env.proxy.prod"
       tags: ['never', 'system', 'docker', 'full']
 
+    - name: Set nginx proxy dockerfile
+      template:
+        src: "nginx/Dockerfile.yml.j2"
+        dest: "{{bootstrap_dir}}/Dockerfile"
+      tags: ['never', 'system', 'docker', 'full']
+
     ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
 
     - name: Create docker-compose file
