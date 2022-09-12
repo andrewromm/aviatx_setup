@@ -17,6 +17,8 @@ EMAIL=""
 DOMAIN=""
 DEF_HOSTALIAS="aviatx"
 HOSTALIAS="$DEF_HOSTALIAS"
+PG_USER=""
+PG_PASSWORD=""
 
 ################################################################################
 # Library
@@ -210,6 +212,14 @@ request_email(){
   whiptailInput "EMAIL" "Email" "Email required for issuing letsencrypt SSL." 8 78
 }
 
+request_pg_user(){
+  whiptailInput "PG_USER" "Postgres user" "Define postgreSQL user" 8 78
+}
+
+request_pg_password(){
+  whiptailInput "PG_USER" "Postgres user" "Define postgreSQL password" 8 78
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -255,6 +265,8 @@ load_config(){
     DOMAIN=$(awk -F "=" '/domain/ {print $2}' $FACT_CONF)
     HOSTALIAS=$(awk -F "=" '/hostalias/ {print $2}' $FACT_CONF)
     EMAIL=$(awk -F "=" '/email/ {print $2}' $FACT_CONF)
+    PG_USER=$(awk -F "=" '/pg_user/ {print $2}' $FACT_CONF)
+    PG_PASSWORD=$(awk -F "=" '/pg_password/ {print $2}' $FACT_CONF)
     if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
 }
@@ -277,6 +289,8 @@ save_config(){
 email=${EMAIL}
 domain=${DOMAIN}
 hostalias=${HOSTALIAS}
+pg_user=${PG_USER}
+pg_password=${PG_PASSWORD}
 installed=${INSTALLED}""" > $FACT_CONF
 }
 

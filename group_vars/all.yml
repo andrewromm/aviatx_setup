@@ -38,3 +38,6 @@ repos:
   backend: "{{_git_organization}}/mtx_trac_backend.git"
 # ########## ssl ##########
 _letsencrypt_test: "true"
+# ########## postgress ##########
+_pg_user: "{{_local_config.domain|default('user')}}"
+_pg_password: "{{_local_config.domain|default('password')}}"
