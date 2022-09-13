@@ -45,5 +45,5 @@
       tags: ["full"]
 
     - debug:
-        msg: {{ pg_result.databases }}
+        msg: "{{ pg_result.databases }}"
       tags: ["full"]
