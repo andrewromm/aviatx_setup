@@ -29,7 +29,7 @@ media_dir: '{{home_dir}}/media'
 fake_db_dir: '{{home_dir}}/db'
 pg_db_dir: '{{home_dir}}/pg'
 create_dirs:
-  - ["{{ backend_dir }}", "{{ media_dir }}", "{{ fake_db_dir }}", "{{ pg_db_dir }}", "{{ frontend_dir }}", "{{ envs_dir }}", ]
+  - ["{{ backend_dir }}", "{{ media_dir }}", "{{ fake_db_dir }}", "{{ frontend_dir }}", "{{ envs_dir }}", ]
 # ########## ssh key ##########
 _ssh_key: '/srv/aviatx/ssh/aviatx_rsa'
 # ########## repos ##########
