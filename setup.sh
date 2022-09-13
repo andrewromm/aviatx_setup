@@ -254,7 +254,7 @@ ANS_BRANCH="-e branch=${BOOTSTRAP_BRANCH}"
 
 run_postgresql_setup() { # (tags, custom)
   print_status "Starting PostgreSQL setup"
-  cmd="postgresql.yml --connection=local --tags=${1} $ANS_PY"
+  cmd="postgresql.yml --connection=local $ANS_PY"
   echo "executing ansible-playbook ${cmd}"
   ansible-playbook $cmd
   if [ $? -eq 0 ]; then print_status "Done"; else print_error "FAILED"; exit 1; fi
