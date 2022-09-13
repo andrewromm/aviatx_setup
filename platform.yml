@@ -37,10 +37,10 @@
         filter:
         - databases
       register: pg_result
-      failed_when: _pg_db in pg_result.databases.keys()
+      failed_when: _pg_db not in pg_result.databases.keys()
       tags: ["full"]
 
     - debug:
-        msg: "Found"
-      when: _pg_db in pg_result.databases.keys()
+        msg: "Not Found"
+      when: _pg_db not in pg_result.databases.keys()
       tags: ["full"]
