@@ -186,7 +186,7 @@ whiptailInput() {
           if [ "$value" != "$init" ]; then
             if [ $value == $confirmation ]; then
               if [[ -n ${value// } ]]; then
-                enc=$(echo "md5`echo -n ${value}${PG_USER} | md5sum | awk '{print $1}'`") #$(openssl passwd -1 ${value})
+                enc=$(echo -n ${value})  #$(echo "md5`echo -n ${value}${PG_USER} | md5sum | awk '{print $1}'`") $(openssl passwd -1 ${value})
                 eval $1="'$enc'"
                 save_config
               fi
