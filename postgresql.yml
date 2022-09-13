@@ -1,21 +1,4 @@
 ---
-- hosts: aviatx
-  become: yes
-
-  pre_tasks:
-    - name: "Install packages"
-      dnf: "name={{ item }} state=present"
-      with_items:
-        - postgresql
-        - postgresql-server
-      tags: ["full"]
-
-    - name: "Install Python packages"
-      pip: "name={{ item }}  state=present"
-      with_items:
-        - psycopg2-binary
-      tags: ["full"]
-
   tasks:
     - name: "Find out if PostgreSQL is initialized"
       ansible.builtin.stat:

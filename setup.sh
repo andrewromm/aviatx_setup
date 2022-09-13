@@ -142,7 +142,7 @@ setup_system_packages() {
     && apt-get -yqq install dialog whiptail nano \
       curl git locales \
       python3 python3-dev python3-pip python3-netaddr python3-setuptools python3-requests \
-      build-essential libffi-dev ca-certificates zlib1g-dev libssl-dev openssl > $INSTALL_LOG \
+      build-essential libffi-dev ca-certificates zlib1g-dev libssl-dev openssl postgresql postgresql-server > $INSTALL_LOG \
     && print_ok
 }
 
