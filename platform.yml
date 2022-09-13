@@ -38,9 +38,9 @@
         # login_user: "{{ _pg_user }}"
         # login_password: "{{ _pg_password }}"
         # login_host: 127.0.0.1
+        filter:
+        - databases
       register: pg_result
-      filter:
-      - databases
       # failed_when: result.databases | length
       tags: ["full"]
 
