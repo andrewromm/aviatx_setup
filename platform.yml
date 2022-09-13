@@ -41,5 +41,6 @@
       tags: ["full"]
 
     - debug:
-        msg: "{{ _pg_db }} in {{ pg_result.databases.values() }}"
+        msg: "Found"
+      when: _pg_db in pg_result.databases.values()
       tags: ["full"]
