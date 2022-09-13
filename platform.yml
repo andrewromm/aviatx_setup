@@ -34,10 +34,6 @@
       become: yes
       become_user: postgres
       postgresql_info:
-        db: "{{ _pg_db }}"
-        # login_user: "{{ _pg_user }}"
-        # login_password: "{{ _pg_password }}"
-        # login_host: 127.0.0.1
         filter:
         - databases
       register: pg_result
@@ -45,5 +41,5 @@
       tags: ["full"]
 
     - debug:
-        msg: "{{ pg_result.databases }}"
+        msg: "{{ _pg_db }} in {{ pg_result.databases.values() }}"
       tags: ["full"]
