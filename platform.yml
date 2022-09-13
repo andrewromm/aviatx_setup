@@ -39,9 +39,11 @@
         # login_password: "{{ _pg_password }}"
         # login_host: 127.0.0.1
       register: pg_result
+      filter:
+      - databases
       # failed_when: result.databases | length
       tags: ["full"]
 
     - debug:
-        msg: Databases length {{ pg_result.databases | length }}
+        msg: {{ pg_result.databases }}
       tags: ["full"]
