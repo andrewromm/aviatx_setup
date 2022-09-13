@@ -34,6 +34,7 @@
       postgresql_info:
         db: "{{ _pg_db }}"
         login_user: "{{ _pg_user }}"
+        login_password: "{{ _pg_password }}"
         login_host: 127.0.0.1
       register: pg_result
       # failed_when: result.databases | length
