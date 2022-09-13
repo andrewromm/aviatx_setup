@@ -37,7 +37,7 @@
         filter:
         - databases
       register: pg_result
-      # failed_when: test not in result.databases.values()
+      failed_when: _pg_db in pg_result.databases.keys()
       tags: ["full"]
 
     - debug:
