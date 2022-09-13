@@ -11,7 +11,7 @@
           postgresql_backup_local_dir: "{{ pg_db_dir }}"
           postgresql_backup_dir: "{{ pg_db_dir }}/backups"
           postgresql_pg_hba_conf:
-            - host all all 172.17.0.0/16 md5
+            - host  all  all 0.0.0.0/0 md5
           postgresql_conf:
             - listen_addresses: "'*'"
         include_role:
