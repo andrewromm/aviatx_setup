@@ -27,7 +27,7 @@ frontend_dir: '{{home_dir}}/frontend'
 envs_dir: '{{home_dir}}/envs'
 media_dir: '{{home_dir}}/media'
 fake_db_dir: '{{home_dir}}/db'
-pg_db_dir: '{{home_dir}}/pg'
+pg_db_dir: '/srv/aviatx/pg'
 create_dirs:
   - ["{{ backend_dir }}", "{{ media_dir }}", "{{ fake_db_dir }}", "{{ frontend_dir }}", "{{ envs_dir }}", ]
 # ########## ssh key ##########

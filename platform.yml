@@ -29,126 +29,16 @@
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
       tags: ["never", "full", "platform", "dirs"]
 
-    ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
+    #### ##### ##### ##### #####    Check PostgreSQL    ##### ##### ##### ##### ##### 
+    - name: Check if PostgreSQL db is accessible
+      postgresql_info:
+        db: "{{ _pg_db }}"
+        login_user: "{{ _pg_user }}"
+        login_host: 127.0.0.1
+      register: pg_result
+      # failed_when: result.databases | length
+      tags: ["full"]
 
-    - name: Cloning Backend
-      git:
-        repo: '{{repos.backend}}'
-        version: main
-        clone: yes
-        force: yes
-        # accept_hostkey: no
-        key_file: '{{_ssh_key}}'
-        dest: '{{backend_dir}}'
-        update: yes
-      become_user: "{{_uid}}"
-      tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
-
-    ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### ##### 
-
-    - name: Cloning Frontend
-      git:
-        repo: '{{repos.frontend}}'
-        version: main
-        clone: yes
-        force: yes
-        # accept_hostkey: no
-        key_file: '{{_ssh_key}}'
-        dest: '{{frontend_dir}}'
-        update: yes
-      become_user: "{{_uid}}"
-      tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
-
-    ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### ##### 
-
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
-        state: present
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
-        state: present
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Update apt and install docker-ce
-      apt:
-        name: docker-ce
-        state: latest
-        update_cache: true
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Install Docker Module for Python
-      pip:
-        name: docker
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Install Docker Compose for Python
-      pip:
-        name: docker-compose
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Docker create media volume
-      docker_volume:
-        name: media_volume
-        driver: local
-        driver_options:
-          type: none
-          device: "{{media_dir}}"
-          o: bind
-      tags: ['never', 'system', 'docker', 'full']
-
-    ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
-
-    - name: Set backend env variables
-      template:
-        src: "templates/env_django.yml.j2"
-        dest: "{{envs_dir}}/.env.django.prod"
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Set frontend env variables  
-      template:
-        src: "templates/env_nuxtjs.yml.j2"
-        dest: "{{envs_dir}}/.env.nuxtjs.prod"
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Set nginx proxy env variables
-      template:
-        src: "templates/env_proxy.yml.j2"
-        dest: "{{envs_dir}}/.env.proxy.prod"
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Set nginx proxy dockerfile
-      template:
-        src: "nginx/Dockerfile.yml.j2"
-        dest: "{{bootstrap_dir}}/nginx/Dockerfile"
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Copy nginx proxy config
-      template:
-        src: "nginx/vhost.d/custom.yml.j2"
-        dest: "{{bootstrap_dir}}/nginx/vhost.d/{{_domain}}"
-      tags: ['never', 'system', 'docker', 'full']
-
-    ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
-
-    - name: Create docker-compose file
-      template:
-        src: "templates/docker-compose.yml.j2"
-        dest: "{{bootstrap_dir}}/docker-compose.yml"
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Tear down existing services
-      docker_compose:
-        project_src: "{{bootstrap_dir}}"
-        state: absent
-        remove_images: all
-      tags: ['never', 'system', 'docker', 'full']
-
-    - name: Create and start services
-      docker_compose:
-        project_src: "{{bootstrap_dir}}"
-        recreate: smart
-      tags: ['never', 'system', 'docker', 'full']
+    - debug:
+        msg: Databases length {{ pg_result.databases | length }}
+      tags: ["full"]
