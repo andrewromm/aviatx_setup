@@ -79,6 +79,19 @@
             state=present
       tags: ['full']
 
+    - name: Allow md5 connection for the db user
+      postgresql_pg_hba:
+        dest: "~/data/pg_hba.conf"
+        contype: host
+        databases: all
+        method: md5
+        users: "{{ _pg_user }}"
+        create: true
+      become: true
+      become_user: postgres
+      notify: restart postgres
+      tags: ['full']
+
     ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
 
     - name: Cloning Backend
