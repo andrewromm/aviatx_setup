@@ -4,6 +4,6 @@
 
   vars:
     postgresql_version: 12
-    postgresql_backup_dir: /archive
+    postgresql_backup_local_dir: "{{ pg_db_dir }}"
   roles:
     - gal.postgresql
