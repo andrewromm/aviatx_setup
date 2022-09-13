@@ -37,5 +37,9 @@
         filter:
         - databases
       register: pg_result
-      failed_when: '"aviatx" not in pg_result.databases.values()'
+      # failed_when: test not in result.databases.values()
+      tags: ["full"]
+
+    - debug:
+        msg: "{{ _pg_db }} in {{ pg_result.databases.values() }}"
       tags: ["full"]
