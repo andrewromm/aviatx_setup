@@ -37,5 +37,5 @@
         filter:
         - databases
       register: pg_result
-      failed_when: "test" not in pg_result.databases.values()
+      failed_when: 'test' not in pg_result.databases.values()
       tags: ["full"]
