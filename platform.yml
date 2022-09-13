@@ -42,5 +42,5 @@
 
     - debug:
         msg: "Found"
-      when: _pg_db in pg_result.databases.values()
+      when: _pg_db in pg_result.databases.keys()
       tags: ["full"]
