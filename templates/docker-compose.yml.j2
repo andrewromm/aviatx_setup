@@ -1,4 +1,4 @@
-version: '3'
+version: "3.8"
 
 services:
   django:
@@ -13,6 +13,8 @@ services:
       - media_volume:/home/app/web/media
     expose:
       - 8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - {{envs_dir}}/.env.django.prod
 
@@ -28,6 +30,8 @@ services:
     command: celery -A backend worker --loglevel=debug --concurrency=4 -l info
     volumes:
         - .:/usr/src/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
         - {{envs_dir}}/.env.django.prod
     depends_on:
@@ -42,6 +46,8 @@ services:
     command: celery -A backend beat -l info
     volumes:
         - .:/usr/src/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
         - {{envs_dir}}/.env.django.prod
     depends_on:
