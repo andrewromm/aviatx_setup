@@ -186,7 +186,7 @@ whiptailInput() {
           if [ "$value" != "$init" ]; then
             if [ $value == $confirmation ]; then
               if [[ -n ${value// } ]]; then
-                enc=$(openssl passwd -apr1 ${value})
+                enc=$(openssl passwd -5 ${value})
                 eval $1="'$enc'"
                 save_config
               fi
