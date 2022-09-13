@@ -49,7 +49,7 @@
         version: main
         clone: yes
         force: yes
-        # accept_hostkey: no
+        accept_hostkey: yes
         key_file: '{{_ssh_key}}'
         dest: '{{backend_dir}}'
         update: yes
@@ -64,7 +64,7 @@
         version: main
         clone: yes
         force: yes
-        # accept_hostkey: no
+        accept_hostkey: yes
         key_file: '{{_ssh_key}}'
         dest: '{{frontend_dir}}'
         update: yes
