@@ -36,10 +36,5 @@
       postgresql_info:
         filter:
         - databases
-      register: pg_result
-      # failed_when: result.databases | length
-      tags: ["full"]
-
-    - debug:
-        msg: "{{ _pg_db }} in {{ pg_result.databases.values() }}"
+      failed_when: test not in result.databases.values()
       tags: ["full"]
