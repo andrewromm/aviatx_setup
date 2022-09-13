@@ -31,11 +31,13 @@
 
     #### ##### ##### ##### #####    Check PostgreSQL    ##### ##### ##### ##### ##### 
     - name: Check if PostgreSQL db is accessible
+      become: yes
+      become_user: postgres
       postgresql_info:
         db: "{{ _pg_db }}"
-        login_user: "{{ _pg_user }}"
-        login_password: "{{ _pg_password }}"
-        login_host: 127.0.0.1
+        # login_user: "{{ _pg_user }}"
+        # login_password: "{{ _pg_password }}"
+        # login_host: 127.0.0.1
       register: pg_result
       # failed_when: result.databases | length
       tags: ["full"]
