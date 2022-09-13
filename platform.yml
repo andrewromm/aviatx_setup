@@ -214,7 +214,7 @@
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         recreate: smart
-      tags: ['never', 'system', 'docker', 'full']
+      # tags: ['never', 'system', 'docker', 'full']
 
   handlers:
     - name: restart postgres
