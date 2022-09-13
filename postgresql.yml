@@ -3,9 +3,19 @@
   hosts: aviatx
   become: yes
 
-  vars:
-    postgresql_version: 12
-    postgresql_backup_local_dir: "{{ pg_db_dir }}"
-    postgresql_backup_dir: "{{ pg_db_dir }}"
-  roles:
-    - gal.postgresql
+  tasks:
+    - block:
+      - name: Install PostgreSQL
+        vars:
+          postgresql_version: 12
+          postgresql_backup_local_dir: "{{ pg_db_dir }}"
+          postgresql_backup_dir: "{{ pg_db_dir }}/backups"
+        include_role:
+          name: gal.postgresql
+
+      - name: "Create app database"
+        postgresql_db:
+          state: present
+          name: "{{ _pg_db }}"
+        become: yes
+        become_user: postgres
