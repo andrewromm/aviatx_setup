@@ -19,3 +19,38 @@
           name: "{{ _pg_db }}"
         become: yes
         become_user: postgres
+
+      - name: "Create db user"
+        postgresql_user:
+          state: present
+          name: "{{ _pg_user }}"
+          password: "{{ _pg_password }}"
+        become: yes
+        become_user: postgres
+
+      - name: "Grant db user access to app db"
+        postgresql_privs:
+          type: database
+          database: "{{ _pg_db }}"
+          roles: "{{ _pg_user }}"
+          grant_option: no
+          privs: all
+        become: yes
+        become_user: postgres
+        notify: restart postgres
+
+      # - name: "Allow md5 connection for the db user"
+      #   postgresql_pg_hba:
+      #     dest: "~/data/pg_hba.conf"
+      #     contype: host
+      #     databases: all
+      #     method: md5
+      #     users: "{{ db_user }}"
+      #     create: true
+      #   become: yes
+      #   become_user: postgres
+      #   notify: restart postgres
+
+  handlers:
+    - name: restart postgres
+      service: name=postgresql state=restarted 
