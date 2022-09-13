@@ -10,6 +10,7 @@ KICKSTART_CMD="curl -s https://raw.githubusercontent.com/andrewromm/aviatx_setup
 BINALIAS=/usr/local/bin/aviatx
 FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
+CUSTOM_TASKS_FILE=tasks/custom.yml
 
 # state vars
 INSTALLED=""
@@ -19,6 +20,8 @@ DEF_HOSTALIAS="aviatx"
 HOSTALIAS="$DEF_HOSTALIAS"
 PG_USER=""
 PG_PASSWORD=""
+
+ROLES_UPDATED=0
 
 ################################################################################
 # Library
@@ -162,6 +165,16 @@ setup_runner() {
     && print_ok
 }
 
+setup_playbook() {
+  if [ $ROLES_UPDATED -eq 1 ]; then return 0; fi
+  print_status "Updating ansible roles" \
+  && cd $BOOTSTRAP_DIR \
+  && ansible-galaxy install -r install_roles.yml --force > $INSTALL_LOG \
+  && touch $CUSTOM_TASKS_FILE \
+  && print_ok \
+  && ROLES_UPDATED=1
+}
+
 ################################################################################
 ## Dialogs
 ################################################################################
@@ -239,6 +252,15 @@ run_full_setup_to_apply_dialog(){
 ANS_PY="-e ansible_python_interpreter=/usr/bin/python3"
 ANS_BRANCH="-e branch=${BOOTSTRAP_BRANCH}"
 
+run_postgresql_setup() { # (tags, custom)
+  print_status "Starting PostgreSQL setup"
+  cmd="postgresql.yml --connection=local --tags=${1} $ANS_PY $ANS_BRANCH ${2}"
+  echo "executing ansible-playbook ${cmd}"
+  ansible-playbook $cmd
+  if [ $? -eq 0 ]; then print_status "Done"; else print_error "FAILED"; exit 1; fi
+  greate_success_dialog
+}
+
 run_platform_playbook() { # (tags, custom)
   print_status "Starting ansible"
   cmd="platform.yml --connection=local --tags=${1} $ANS_PY $ANS_BRANCH ${2}"
@@ -306,6 +328,7 @@ setup_platform(){
   update_bootstrap
   setup_python_packages
   setup_runner
+  setup_playbook
   INSTALLED=$VERSION
   save_config
 }
@@ -354,6 +377,7 @@ menu() {
   # --menu <text> <height> <width> <listheight>
   OPTION=$(whiptail --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
   "01" "    Upgrade OS" \
+  "02" "    Install PostgreSQL" \
   "03" "    Full Install" \
   "04" "    Upgrade" \
   "12" "    Change domain '${DOMAIN}'" \
@@ -367,6 +391,7 @@ menu() {
 
   case "$OPTION" in
     "01") update_reboot_dialog; run_upgrade_playbook ;;
+    "02") run_postgresql_setup ;;
     "03") run_platform_playbook full ;;
     "04") run_platform_playbook pservice,ppart ;;
     "12") request_domain ;;

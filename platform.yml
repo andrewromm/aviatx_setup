@@ -28,69 +28,6 @@
       vars:
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
       tags: ["never", "full", "platform", "dirs"]
-    
-    ##### ##### ##### ##### #####    Install postgresql    ##### ##### ##### ##### ##### 
-
-    - name: Install dependencies for PostgreSQL
-      apt: name={{ item }} update_cache=true state=latest
-      with_items:
-        - bash
-        - openssl
-        - libssl-dev
-        - libssl-doc
-      tags: ['full']
-    
-    - name: Install PostgreSQL 
-      apt: name={{ item }} update_cache=true state=present
-      with_items:
-        - postgresql
-        - postgresql-contrib
-        - libpq-dev
-        - python3-psycopg2
-      tags: ['full']
-
-    - name: Ensure the PostgreSQL service is running
-      service: name=postgresql state=started enabled=yes
-      tags: ['full']
-
-    - name: Create the database specified in vars
-      become: true
-      become_user: postgres
-      postgresql_db: name={{ _pg_db }}
-            template='template0'
-            state=present
-      tags: ['full']
-    
-    - name: Ensure user has access to the new database
-      become: true
-      become_user: postgres
-      postgresql_user: db={{ _pg_db }}
-            name={{ _pg_user }}
-            password={{ _pg_password }}
-            priv=ALL
-            state=present
-      tags: ['full']
-
-    - name: Ensure user does not have unnecessary permissions
-      become: true
-      become_user: postgres
-      postgresql_user: name={{ _pg_user }}
-            role_attr_flags=NOSUPERUSER,NOCREATEDB
-            state=present
-      tags: ['full']
-
-    # - name: Allow md5 connection for the db user
-    #   postgresql_pg_hba:
-    #     dest: "/etc/postgresql/12/main/pg_hba.conf"
-    #     contype: host
-    #     databases: all
-    #     method: md5
-    #     users: "{{ _pg_user }}"
-    #     create: true
-    #   become: true
-    #   become_user: postgres
-    #   notify: restart postgres
-    #   tags: ['full']
 
     ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
 
@@ -214,8 +151,4 @@
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         recreate: smart
-      # tags: ['never', 'system', 'docker', 'full']
-
-  handlers:
-    - name: restart postgres
-      service: name=postgresql state=restarted
+      tags: ['never', 'system', 'docker', 'full']

@@ -1,0 +1,4 @@
+# install_roles.yml
+- src: https://github.com/galaxyproject/ansible-postgresql
+  version: main
+  name: gal.postgresql
