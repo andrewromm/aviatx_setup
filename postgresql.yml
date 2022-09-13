@@ -1,13 +1,15 @@
 ---
-- hosts: aviatx
+- name: Installing PostgreSQL
+  hosts: aviatx
+  become: yes
 
   tasks:                                                                    
     - name: Printing Fact Variables                                         
       debug:                                                                
         msg: "The value of OS Family is {{ansible_os_family}}"   
 
-  vars:
-    postgresql_version: 12
-    postgresql_backup_local_dir: "{{ pg_db_dir }}"
-  roles:
-    - gal.postgresql
+  # vars:
+  #   postgresql_version: 12
+  #   postgresql_backup_local_dir: "{{ pg_db_dir }}"
+  # roles:
+  #   - gal.postgresql
