@@ -11,6 +11,7 @@ services:
     volumes:
       - static_volume:/home/app/web/static
       - media_volume:/home/app/web/media
+      - {{fake_db_dir}}/db.sqlite3:/home/app/web/db.sqlite3
     expose:
       - 8000
     env_file:
@@ -28,6 +29,7 @@ services:
     command: celery -A backend worker --loglevel=debug --concurrency=4 -l info
     volumes:
         - .:/usr/src/app
+        - {{fake_db_dir}}/db.sqlite3:/home/app/web/db.sqlite3
     env_file:
         - {{envs_dir}}/.env.django.prod
     depends_on:
@@ -42,6 +44,7 @@ services:
     command: celery -A backend beat -l info
     volumes:
         - .:/usr/src/app
+        - {{fake_db_dir}}/db.sqlite3:/home/app/web/db.sqlite3
     env_file:
         - {{envs_dir}}/.env.django.prod
     depends_on:

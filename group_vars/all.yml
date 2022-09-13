@@ -40,7 +40,7 @@ repos:
 # ########## ssl ##########
 _letsencrypt_test: "true"
 # ########## postgress ##########
-_pg: 0
+_pg: 1
 _pg_db: aviatx
 _pg_user: "{{_local_config.pg_user|default('user')}}"
 _pg_password: "{{_local_config.pg_password|default('password')}}"
