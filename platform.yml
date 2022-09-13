@@ -36,5 +36,6 @@
       postgresql_info:
         filter:
         - databases
-      failed_when: test not in result.databases.values()
+      register: pg_result
+      failed_when: test not in pg_result.databases.values()
       tags: ["full"]
