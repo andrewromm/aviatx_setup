@@ -5,3 +5,4 @@ passlib
 netaddr
 bumpversion
 pyopenssl
+psycopg2-binary

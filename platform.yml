@@ -2,13 +2,8 @@
 - name: Installing platform
   hosts: aviatx
   become: yes
+  
   tasks:
-
-    - debug:
-        msg: 
-          domain: "{{_domain}}"
-      tags: ["full"]
-      # tags: ["never"]
 
     #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### ##### 
 
@@ -34,6 +29,10 @@
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
       tags: ["never", "full", "platform", "dirs"]
     
+    ##### ##### ##### ##### #####    Install postgresql    ##### ##### ##### ##### ##### 
+
+    - include: postgresql.yml
+
     ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
 
     - name: Cloning Backend
