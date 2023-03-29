@@ -3,7 +3,6 @@
 ## Step 1: Create ssh key
 Note: without passphrase
 
-mkdir /srv/aviatx/; cd /srv/aviatx/; mkdir ssh; cd /srv/
 ssh-keygen -o -t rsa -C "andrew.romm@gmail.com" -f /srv/aviatx/ssh/aviatx_rsa
 cat /srv/aviatx/ssh/aviatx_rsa.pub
 
