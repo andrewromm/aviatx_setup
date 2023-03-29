@@ -20,7 +20,7 @@ DOMAIN=""
 HOSTALIAS=""
 PG_USER=""
 PG_PASSWORD=""
-SSL_TEST="false"
+SSL_TEST=""
 
 ROLES_UPDATED=0
 
@@ -219,7 +219,7 @@ request_domain(){
 }
 
 request_hostalias(){
-  whiptailInput "HOSTALIAS" "Short hostname" "Shot server hostname that you can see at command line prompt." 8 78
+  whiptailInput "HOSTALIAS" "Short hostname" "Short server hostname that you can see at command line prompt." 8 78
 }
 
 request_email(){
