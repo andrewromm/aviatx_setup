@@ -20,7 +20,7 @@ DOMAIN=""
 HOSTALIAS=""
 PG_USER=""
 PG_PASSWORD=""
-SSL_TEST=""
+SSL_TEST="false"
 
 ROLES_UPDATED=0
 
@@ -362,8 +362,8 @@ initialize(){
   done
   while [ -z "${HOSTALIAS// }" ]; do request_hostalias
   done
-  while [ -z "${SSL_TEST// }" ]; do request_ssl_test
-  done
+  #while [ -z "${SSL_TEST// }" ]; do request_ssl_test
+  #done
   while [ -z "${PG_USER// }" ]; do request_pg_user
   done
   while [ -z "${PG_PASSWORD// }" ]; do request_pg_password
