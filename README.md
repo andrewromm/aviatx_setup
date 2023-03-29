@@ -8,7 +8,7 @@ cat /srv/aviatx/ssh/aviatx_rsa.pub
 
 ## Step 2: Run setup script
 
-curl https://raw.githubusercontent.com/andrewromm/aviatx_setup/master/setup.sh | sudo bash
+curl https://raw.githubusercontent.com/andrewromm/aviatx_setup/master/setup.sh | sudo -E bash -
 
 ## Step 3: Run PostgreSql setup and restore db
 

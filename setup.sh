@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-[ $UID != 0 ] && exec sudo $0 "$@"
 
 VERSION=3.0.1
 BOOTSTRAP_BRANCH=${BRANCH:-master}
@@ -383,7 +382,7 @@ MENU_TEXT="\nChoose an option:\n"
 
 menu() {
   # --menu <text> <height> <width> <listheight>
-  OPTION=$(whiptail --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
+  OPTION=$(whiptail --no-escape --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
   "01" "    Upgrade OS" \
   "02" "    Install PostgreSQL" \
   "03" "    Full Install" \
