@@ -360,8 +360,6 @@ initialize(){
   done
   while [ -z "${DOMAIN// }" ]; do request_domain
   done
-  while [ -z "${HOSTALIAS// }" ]; do request_hostalias
-  done
   while [ -z "${PG_USER// }" ]; do request_pg_user
   done
   while [ -z "${PG_PASSWORD// }" ]; do request_pg_password
