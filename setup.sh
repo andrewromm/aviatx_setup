@@ -16,8 +16,8 @@ CUSTOM_TASKS_FILE=tasks/custom.yml
 INSTALLED=""
 EMAIL=""
 DOMAIN=""
-DEF_HOSTALIAS="aviatx"
-HOSTALIAS="$DEF_HOSTALIAS"
+# DEF_HOSTALIAS="aviatx"
+HOSTALIAS=""
 PG_USER=""
 PG_PASSWORD=""
 SSL_TEST="false"
@@ -295,7 +295,7 @@ load_config(){
     PG_USER=$(awk -F "=" '/pg_user/ {print $2}' $FACT_CONF)
     PG_PASSWORD=$(awk -F "=" '/pg_password/ {print $2}' $FACT_CONF)
     SSL_TEST=$(awk -F "=" '/ssl_test/ {print $2}' $FACT_CONF)
-    if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
+    # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
 }
 
