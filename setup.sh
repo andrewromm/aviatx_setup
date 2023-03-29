@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=2.0.1
+VERSION=3.0.1
 BOOTSTRAP_BRANCH=${BRANCH:-master}
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
@@ -16,10 +16,11 @@ CUSTOM_TASKS_FILE=tasks/custom.yml
 INSTALLED=""
 EMAIL=""
 DOMAIN=""
-DEF_HOSTALIAS="aviatx"
-HOSTALIAS="$DEF_HOSTALIAS"
+# DEF_HOSTALIAS="aviatx"
+HOSTALIAS=""
 PG_USER=""
 PG_PASSWORD=""
+SSL_TEST="false"
 
 ROLES_UPDATED=0
 
@@ -218,7 +219,7 @@ request_domain(){
 }
 
 request_hostalias(){
-  whiptailInput "HOSTALIAS" "Short hostname" "Shot server hostname that you can see at command line prompt." 8 78
+  whiptailInput "HOSTALIAS" "Short hostname" "Short server hostname that you can see at command line prompt." 8 78
 }
 
 request_email(){
@@ -231,6 +232,10 @@ request_pg_user(){
 
 request_pg_password(){
   whiptailInput "PG_PASSWORD" "Postgres password" "Define postgreSQL password" 8 78
+}
+
+request_ssl_test(){
+  whiptailInput "SSL_TEST" "If SSL test mode" "Select if receive test Letsencrypt SSL certificate." 8 78
 }
 
 update_reboot_dialog(){
@@ -289,7 +294,8 @@ load_config(){
     EMAIL=$(awk -F "=" '/email/ {print $2}' $FACT_CONF)
     PG_USER=$(awk -F "=" '/pg_user/ {print $2}' $FACT_CONF)
     PG_PASSWORD=$(awk -F "=" '/pg_password/ {print $2}' $FACT_CONF)
-    if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
+    SSL_TEST=$(awk -F "=" '/ssl_test/ {print $2}' $FACT_CONF)
+    # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
 }
 
@@ -298,6 +304,7 @@ save_inventory(){
   echo """
 [private]
 ${HOSTALIAS} ansible_host=${DOMAIN}
+
 [aviatx]
 ${HOSTALIAS}
 """ > inventory/private
@@ -312,6 +319,7 @@ domain=${DOMAIN}
 hostalias=${HOSTALIAS}
 pg_user=${PG_USER}
 pg_password=${PG_PASSWORD}
+ssl_test=${SSL_TEST}
 installed=${INSTALLED}""" > $FACT_CONF
 }
 
@@ -356,7 +364,7 @@ initialize(){
   done
   while [ -z "${PG_PASSWORD// }" ]; do request_pg_password
   done
-  while [ -z ${HOSTALIAS// } ]; do request_hostalias
+  while [ -z "${HOSTALIAS// }" ]; do request_hostalias
   done
 }
 
@@ -382,7 +390,8 @@ menu() {
   "12" "    Change domain '${DOMAIN}'" \
   "13" "    Change host alias '${HOSTALIAS}'" \
   "14" "    Change Email '${EMAIL}'" \
-  "00"  "    Exit"  3>&1 1>&2 2>&3)
+  "15" "    Change SSL Letsencrypt mode" \
+  "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
   [[ "$EXITCODE" = 255 ]] && break;
@@ -396,6 +405,7 @@ menu() {
     "12") request_domain ;;
     "13") request_hostalias ;;
     "14") request_email ;;
+    "15") request_ssl_test ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac
