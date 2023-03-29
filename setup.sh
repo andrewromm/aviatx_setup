@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+[ $UID != 0 ] && exec sudo $0 "$@"
 
 VERSION=3.0.1
 BOOTSTRAP_BRANCH=${BRANCH:-master}
@@ -401,7 +402,7 @@ menu() {
     "01") update_reboot_dialog; run_upgrade_playbook ;;
     "02") run_postgresql_setup ;;
     "03") run_platform_playbook full ;;
-    "04") run_platform_playbook pservice,ppart ;;
+    "04") run_platform_playbook upgrade ;;
     "12") request_domain ;;
     "13") request_hostalias ;;
     "14") request_email ;;

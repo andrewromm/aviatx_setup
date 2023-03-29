@@ -24,7 +24,7 @@
 
       vars:
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
-      tags: ["never", "full", "platform", "dirs"]
+      tags: ["full"]
 
     #### ##### ##### ##### #####    Check PostgreSQL    ##### ##### ##### ##### ##### 
     
@@ -51,7 +51,7 @@
         dest: '{{backend_dir}}'
         update: yes
       become_user: "{{_uid}}"
-      tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
+      tags: ['full', 'upgrade']
 
     ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### ##### 
 
@@ -66,7 +66,7 @@
         dest: '{{frontend_dir}}'
         update: yes
       become_user: "{{_uid}}"
-      tags: ['backend', 'platform', 'ppart', 'band', 'static', 'full']
+      tags: ['full', 'upgrade']
 
     ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### ##### 
 
@@ -74,30 +74,30 @@
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Add Docker Repository
       apt_repository:
         repo: deb https://download.docker.com/linux/ubuntu focal stable
         state: present
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Update apt and install docker-ce
       apt:
         name: docker-ce
         state: latest
         update_cache: true
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Install Docker Module for Python
       pip:
         name: docker
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Install Docker Compose for Python
       pip:
         name: docker-compose
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Docker create media volume
       docker_volume:
@@ -107,7 +107,7 @@
           type: none
           device: "{{media_dir}}"
           o: bind
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
 
@@ -115,31 +115,31 @@
       template:
         src: "templates/env_django.yml.j2"
         dest: "{{envs_dir}}/.env.django.prod"
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Set frontend env variables  
       template:
         src: "templates/env_nuxtjs.yml.j2"
         dest: "{{envs_dir}}/.env.nuxtjs.prod"
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Set nginx proxy env variables
       template:
         src: "templates/env_proxy.yml.j2"
         dest: "{{envs_dir}}/.env.proxy.prod"
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Set nginx proxy dockerfile
       template:
         src: "nginx/Dockerfile.yml.j2"
         dest: "{{bootstrap_dir}}/nginx/Dockerfile"
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     - name: Copy nginx proxy config
       template:
         src: "nginx/vhost.d/custom.yml.j2"
         dest: "{{bootstrap_dir}}/nginx/vhost.d/{{_domain}}"
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full']
 
     ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
 
@@ -147,18 +147,18 @@
       template:
         src: "templates/docker-compose.yml.j2"
         dest: "{{bootstrap_dir}}/docker-compose.yml"
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full', 'upgrade']
 
     - name: Tear down existing services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         state: absent
         remove_images: all
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full', 'upgrade']
 
     - name: Create and start services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         recreate: smart
-      tags: ['never', 'system', 'docker', 'full']
+      tags: ['full', 'upgrade']
 
