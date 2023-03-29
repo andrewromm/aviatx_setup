@@ -382,7 +382,7 @@ MENU_TEXT="\nChoose an option:\n"
 
 menu() {
   # --menu <text> <height> <width> <listheight>
-  OPTION=$(whiptail --no-escape --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
+  OPTION=$(whiptail --title "AviaTX Shell Script Menu" --menu "${MENU_TEXT}" 30 60 18 \
   "01" "    Upgrade OS" \
   "02" "    Install PostgreSQL" \
   "03" "    Full Install" \
