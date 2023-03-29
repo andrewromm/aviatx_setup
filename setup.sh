@@ -366,6 +366,8 @@ initialize(){
   done
   while [ -z "${PG_PASSWORD// }" ]; do request_pg_password
   done
+  while [ -z ${HOSTALIAS// } ]; do request_hostalias
+  done
 }
 
 if [[ -a "$FACT_CONF" ]]; then
