@@ -3,12 +3,16 @@
 ## Step 1: Create ssh key
 Note: without passphrase
 
-ssh-keygen -o -t rsa -C "andrew.romm@gmail.com" -f /srv/aviatx/ssh/aviatx_rsa -N ""
+l
 cat /srv/aviatx/ssh/aviatx_rsa.pub
 
 ## Step 2: Run setup script
 
 curl https://raw.githubusercontent.com/andrewromm/aviatx_setup/master/setup.sh | sudo -E bash -
+
+Note: if Ubuntu 22.04
+sudo -E bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/master/setup.sh)"
+
 
 ## Step 3: Run PostgreSql setup and restore db
 
