@@ -391,7 +391,7 @@ menu() {
   "12" "    Change domain '${DOMAIN}'" \
   "13" "    Change host alias '${HOSTALIAS}'" \
   "14" "    Change Email '${EMAIL}'" \
-  "15" "    Change SSL Letsencrypt mode" \
+  "15" "    Change SSL Letsencrypt mode '${SSL_TEST}'" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
