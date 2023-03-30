@@ -386,7 +386,8 @@ menu() {
   "01" "    Upgrade OS" \
   "02" "    Install PostgreSQL" \
   "03" "    Full Install" \
-  "04" "    Upgrade" \
+  "04" "    Upgrade Frontend" \
+  "05" "    Upgrade Backend" \
   "12" "    Change domain '${DOMAIN}'" \
   "13" "    Change host alias '${HOSTALIAS}'" \
   "14" "    Change Email '${EMAIL}'" \
@@ -401,7 +402,8 @@ menu() {
     "01") update_reboot_dialog; run_upgrade_playbook ;;
     "02") run_postgresql_setup ;;
     "03") run_platform_playbook full ;;
-    "04") run_platform_playbook upgrade ;;
+    "04") run_platform_playbook upgradefrontend ;;
+    "05") run_platform_playbook upgradebackend ;;
     "12") request_domain ;;
     "13") request_hostalias ;;
     "14") request_email ;;
