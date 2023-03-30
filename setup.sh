@@ -6,7 +6,7 @@ BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
 SSH_DIR=/srv/aviatx/ssh
 SSH_FILE=aviatx_rsa
-KICKSTART_CMD="sudo -E bash -c '\$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/${BOOTSTRAP_BRANCH}/setup.sh)'"
+KICKSTART_CMD="sudo -E bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/${BOOTSTRAP_BRANCH}/setup.sh)\""
 BINALIAS=/usr/local/bin/aviatx
 FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
@@ -161,7 +161,7 @@ setup_python_packages() {
 setup_runner() {
   print_status "Installing/Updating AviaTX shortcut"
   rm -f $BINALIAS \
-    && echo -e "#!/bin/bash\n\n${KICKSTART_CMD}\n" > $BINALIAS \
+    && echo -e "#!/bin/bash\n${KICKSTART_CMD}\n" > $BINALIAS \
     && chmod +x $BINALIAS \
     && print_ok
 }
