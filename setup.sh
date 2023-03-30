@@ -158,15 +158,13 @@ setup_python_packages() {
     && print_ok
 }
 
-
 setup_runner() {
   print_status "Installing/Updating AviaTX shortcut"
   rm -f $BINALIAS \
-    && echo -e "#!/usr/bin/env bash\n${KICKSTART_CMD}\n" > $BINALIAS \
+    && echo -e "#!/bin/bash\n\n${KICKSTART_CMD}\n" > $BINALIAS \
     && chmod +x $BINALIAS \
     && print_ok
 }
-
 
 setup_playbook() {
   if [ $ROLES_UPDATED -eq 1 ]; then return 0; fi

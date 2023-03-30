@@ -8,9 +8,6 @@ cat /srv/aviatx/ssh/aviatx_rsa.pub
 
 ## Step 2: Run setup script
 
-curl https://raw.githubusercontent.com/andrewromm/aviatx_setup/master/setup.sh | sudo -E bash -
-
-Note: if Ubuntu 22.04
 sudo -E bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/master/setup.sh)"
 
 
