@@ -147,18 +147,24 @@
       template:
         src: "templates/docker-compose.yml.j2"
         dest: "{{bootstrap_dir}}/docker-compose.yml"
-      tags: ['full', 'upgrade']
+      tags: ['full']
 
     - name: Tear down existing services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         state: absent
         remove_images: all
-      tags: ['full', 'upgrade']
+      tags: ['full']
 
     - name: Create and start services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         recreate: smart
-      tags: ['full', 'upgrade']
+      tags: ['full']
 
+    #### if tag == "upgrade" recompile only containers django and nuxtjs
+    - name: Rebuild django and nuxtjs containers
+      command: docker-compose up --build --scale django=1 nuxtjs=2
+      args:
+        chdir: "{{bootstrap_dir}}"
+      tags: ['upgrade']
