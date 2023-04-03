@@ -3,7 +3,7 @@
 ## Step 1: Create ssh key
 Note: without passphrase
 
-l
+ssh-keygen -o -t rsa -C "andrew.romm@gmail.com" -f /srv/aviatx/ssh/aviatx_rsa -N ""
 cat /srv/aviatx/ssh/aviatx_rsa.pub
 
 ## Step 2: Run setup script
