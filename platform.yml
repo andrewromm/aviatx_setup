@@ -51,7 +51,7 @@
         dest: '{{backend_dir}}'
         update: yes
       become_user: "{{_uid}}"
-      tags: ['full', 'upgrade']
+      tags: ['full', 'upgradebackend']
 
     ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### ##### 
 
@@ -66,7 +66,7 @@
         dest: '{{frontend_dir}}'
         update: yes
       become_user: "{{_uid}}"
-      tags: ['full', 'upgrade']
+      tags: ['full', 'upgradefrontend']
 
     ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### ##### 
 
