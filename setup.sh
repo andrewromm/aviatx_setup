@@ -346,15 +346,22 @@ update_platform(){
 }
 
 initialize(){
-  # check if ssh_key exists
+  # check if ssh_key exists if not create
   print_status "Checking SSH key"
-  if test -f "$SSH_DIR/$SSH_FILE"; 
-  then
-    print_ok "SSH key exists.";
+  if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
+    ssh_key_text=$(whiptail --title "SSH Key Setup" --inputbox "Enter your SSH public key:" 10 60 3>&1 1>&2 2>&3)
+    if [ $? -eq 0 ]; then
+        mkdir -p "$SSH_DIR"
+        echo "$ssh_key_text" >> "$SSH_FILE"
+        echo "SSH key file created at $SSH_DIR/$SSH_FILE"
+    else
+        echo "SSH key setup cancelled"
+        exit 1
+    fi
   else
-    print_error "Upload SSH key to $SSH_DIR";
-    exit 1;
+      echo "SSH key file already exists at $ssh_key_file"
   fi
+
   #########################
   while [ -z "${EMAIL// }" ]; do request_email
   done
