@@ -345,6 +345,15 @@ update_platform(){
   setup_runner
 }
 
+delete_ssh_file(){
+  if [ -f "$SSH_DIR/$SSH_FILE" ]; then
+    rm "$SSH_DIR/$SSH_FILE"
+    echo "SSH key file deleted: $SSH_DIR/$SSH_FILE"
+  else
+    echo "SSH key file does not exist: $SSH_DIR/$SSH_FILE"
+  fi
+}
+
 initialize(){
   # check if ssh_key exists if not create
   print_status "Checking SSH key"
@@ -399,6 +408,7 @@ menu() {
   "13" "    Change host alias '${HOSTALIAS}'" \
   "14" "    Change Email '${EMAIL}'" \
   "15" "    Change SSL Letsencrypt test mode '${SSL_TEST}'" \
+  "16" "    Delete SSH key file" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -415,6 +425,7 @@ menu() {
     "13") request_hostalias ;;
     "14") request_email ;;
     "15") request_ssl_test ;;
+    "16") delete_ssh_file ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac
