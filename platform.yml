@@ -4,59 +4,6 @@
   become: yes
   
   tasks:
-
-    #### ##### ##### ##### #####    Setup UFW    ##### ##### ##### ##### #####
-
-    - name: Install UFW
-      apt:
-        name: ufw
-        state: present
-      tags: ["full"]
-    
-    - name: Allow HTTPS traffic
-      ufw:
-        rule: allow
-        port: https
-      tags: ["full"]
-      
-    - name: Allow SSH traffic
-      ufw:
-        rule: allow
-        port: ssh
-      tags: ["full"]
-
-    - name: Get IP addresses of selected Docker containers
-      docker_container_facts:
-        filters:
-          label: "backend,celery,celery-beat,frontend,nginx-proxy,letsencrypt"
-
-    - name: Add allow rule for Docker containers
-      ufw:
-        rule: allow
-        from: "{{ item.ipv4_address }}/32"
-        to: any
-        port: any
-        proto: any
-        state: enabled
-      loop: "{{ docker_container_facts | json_query('ansible_facts.docker_container_*') }}"
-
-
-    - name: Reload UFW rules
-      ufw:
-        state: reloaded
-      tags: ["full"]
-
-    - name: Enable UFW
-      ufw:
-        state: enabled
-      tags: ["full"]
-
-    - name: Restart UFW service
-      systemd:
-        name: ufw
-        state: restarted
-      tags: ["full"]
-    
     #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### ##### 
 
     - name: Checking python version is 3
@@ -226,3 +173,55 @@
       args:
         chdir: "{{bootstrap_dir}}"
       tags: ['upgradebackend']
+
+#### ##### ##### ##### #####    Setup UFW    ##### ##### ##### ##### #####
+
+    - name: Install UFW
+      apt:
+        name: ufw
+        state: present
+      tags: ["full"]
+    
+    - name: Allow HTTPS traffic
+      ufw:
+        rule: allow
+        port: https
+      tags: ["full"]
+      
+    - name: Allow SSH traffic
+      ufw:
+        rule: allow
+        port: ssh
+      tags: ["full"]
+
+    - name: Get IP addresses of selected Docker containers
+      docker_container_facts:
+        filters:
+          label: "backend,celery,celery-beat,frontend,nginx-proxy,letsencrypt"
+
+    - name: Add allow rule for Docker containers
+      ufw:
+        rule: allow
+        from: "{{ item.ipv4_address }}/32"
+        to: any
+        port: any
+        proto: any
+        state: enabled
+      loop: "{{ docker_container_facts | json_query('ansible_facts.docker_container_*') }}"
+
+
+    - name: Reload UFW rules
+      ufw:
+        state: reloaded
+      tags: ["full"]
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+      tags: ["full"]
+
+    - name: Restart UFW service
+      systemd:
+        name: ufw
+        state: restarted
+      tags: ["full"]
