@@ -358,17 +358,15 @@ initialize(){
   # check if ssh_key exists if not create
   print_status "Checking SSH key"
   if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
-    ssh_key_text=$(whiptail --title "SSH Key Setup" --textbox "Enter your SSH public key:" 10 60 3>&1 1>&2 2>&3)
-    if [ $? -eq 0 ]; then
-        mkdir -p "$SSH_DIR"
-        echo "$ssh_key_text" >> "$SSH_DIR/$SSH_FILE"
-        echo "SSH key file created at $SSH_DIR/$SSH_FILE"
-    else
-        echo "SSH key setup cancelled"
-        exit 1
-    fi
+      nano "$SSH_DIR/$SSH_FILE"
+      if [ -f "$SSH_DIR/$SSH_FILE" ]; then
+          echo "SSH key file created at $SSH_DIR/$SSH_FILE"
+      else
+          echo "Failed to create SSH key file"
+          exit 1
+      fi
   else
-      echo "SSH key file already exists at $ssh_key_file"
+      echo "SSH key file already exists at $SSH_DIR/$SSH_FILE"
   fi
 
   #########################
