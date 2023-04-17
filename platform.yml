@@ -25,10 +25,20 @@
         port: ssh
       tags: ["full"]
 
-    - name: Start UFW service
+    - name: Reload UFW rules
+      ufw:
+        state: reloaded
+      tags: ["full"]
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+      tags: ["full"]
+
+    - name: Restart UFW service
       systemd:
         name: ufw
-        state: started
+        state: restarted
       tags: ["full"]
     
     #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### ##### 
