@@ -358,7 +358,7 @@ initialize(){
   # check if ssh_key exists if not create
   print_status "Checking SSH key"
   if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
-    ssh_key_text=$(whiptail --title "SSH Key Setup" --inputbox "Enter your SSH public key:" 10 60 3>&1 1>&2 2>&3)
+    ssh_key_text=$(whiptail --title "SSH Key Setup" --textbox "Enter your SSH public key:" 10 60 3>&1 1>&2 2>&3)
     if [ $? -eq 0 ]; then
         mkdir -p "$SSH_DIR"
         echo "$ssh_key_text" >> "$SSH_DIR/$SSH_FILE"
