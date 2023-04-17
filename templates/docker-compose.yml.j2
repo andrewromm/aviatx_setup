@@ -28,6 +28,7 @@ services:
         context: {{backend_dir}}/backend
         dockerfile: Dockerfile.prod
     command: celery -A backend worker --loglevel=debug --concurrency=4 -l info
+    restart: always
     volumes:
         - .:/usr/src/app
     extra_hosts:
@@ -44,6 +45,7 @@ services:
         context: {{backend_dir}}/backend
         dockerfile: Dockerfile.prod
     command: celery -A backend beat -l info
+    restart: always
     volumes:
         - .:/usr/src/app
     extra_hosts:
