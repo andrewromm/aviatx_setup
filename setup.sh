@@ -362,6 +362,7 @@ initialize(){
   if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
       nano "$SSH_DIR/$SSH_FILE"
       if [ -f "$SSH_DIR/$SSH_FILE" ]; then
+          chmod 0600 "$SSH_DIR/$SSH_FILE"
           echo "SSH key file created at $SSH_DIR/$SSH_FILE"
       else
           echo "Failed to create SSH key file"
