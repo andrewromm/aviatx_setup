@@ -357,6 +357,9 @@ delete_ssh_file(){
 initialize(){
   # check if ssh_key exists if not create
   print_status "Checking SSH key"
+  if [ ! -d "$SSH_DIR" ]; then
+    mkdir -p "$SSH_DIR"
+  fi
   if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
       nano "$SSH_DIR/$SSH_FILE"
       if [ -f "$SSH_DIR/$SSH_FILE" ]; then
