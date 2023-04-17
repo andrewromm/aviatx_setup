@@ -106,7 +106,6 @@ update_bootstrap() {
     cd $BOOTSTRAP_DIR
     echo $(pwd)
     git clone $BOOTSTRAP_REPO . && git checkout $BOOTSTRAP_BRANCH && print_ok
-    mkdir -p $SSH_DIR
   fi
 }
 
