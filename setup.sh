@@ -361,7 +361,7 @@ initialize(){
     ssh_key_text=$(whiptail --title "SSH Key Setup" --inputbox "Enter your SSH public key:" 10 60 3>&1 1>&2 2>&3)
     if [ $? -eq 0 ]; then
         mkdir -p "$SSH_DIR"
-        echo "$ssh_key_text" >> "$SSH_FILE"
+        echo "$ssh_key_text" >> "$SSH_DIR/$SSH_FILE"
         echo "SSH key file created at $SSH_DIR/$SSH_FILE"
     else
         echo "SSH key setup cancelled"
