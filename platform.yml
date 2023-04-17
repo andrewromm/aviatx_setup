@@ -5,6 +5,32 @@
   
   tasks:
 
+    #### ##### ##### ##### #####    Setup UFW    ##### ##### ##### ##### #####
+
+    - name: Install UFW
+      apt:
+        name: ufw
+        state: present
+      tags: ["full"]
+    
+    - name: Allow HTTPS traffic
+      ufw:
+        rule: allow
+        port: https
+      tags: ["full"]
+      
+    - name: Allow SSH traffic
+      ufw:
+        rule: allow
+        port: ssh
+      tags: ["full"]
+
+    - name: Start UFW service
+      systemd:
+        name: ufw
+        state: started
+      tags: ["full"]
+    
     #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### ##### 
 
     - name: Checking python version is 3
