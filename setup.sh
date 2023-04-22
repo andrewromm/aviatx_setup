@@ -417,7 +417,7 @@ menu() {
   "14" "    Change Email '${EMAIL}'" \
   "15" "    Change SSL Letsencrypt test mode '${SSL_TEST}'" \
   "16" "    Change Backend DEBUG mode '${BACKEND_DEBUG}'" \
-  "16" "    Delete SSH key file" \
+  "17" "    Delete SSH key file" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -435,7 +435,7 @@ menu() {
     "14") request_email ;;
     "15") request_ssl_test ;;
     "16") request_backend_debug ;;
-    "16") delete_ssh_file ;;
+    "17") delete_ssh_file ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac
