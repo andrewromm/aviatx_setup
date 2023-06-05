@@ -11,3 +11,7 @@ sudo --login --user=postgres
 
 pg_restore -U postgres -Ft -d db < db.tar
 
+
+pg_dump aviatx > db.sql
+
+cd /var/lib/postgresql/
