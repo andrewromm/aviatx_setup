@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=3.1.0
+VERSION=3.2.0
 BOOTSTRAP_BRANCH=${BRANCH:-master}
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
