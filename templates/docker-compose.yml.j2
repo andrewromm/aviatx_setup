@@ -21,6 +21,7 @@ services:
   redis:
     container_name: redis
     image: redis:alpine
+    restart: always
 
   celery:
     container_name: celery

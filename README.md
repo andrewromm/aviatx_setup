@@ -10,6 +10,7 @@ sudo -E bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviat
 sudo --login --user=postgres
 
 pg_restore -U postgres -Ft -d db < db.tar
+psql -d mydatabase -f /path/to/backup.sql
 
 
 pg_dump aviatx > db.sql
