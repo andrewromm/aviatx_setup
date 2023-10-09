@@ -6,7 +6,7 @@ services:
     build:
       context: {{backend_dir}}/backend
       dockerfile: Dockerfile.prod
-    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --error-logfile /home/app/logs/error.log --access-logfile /home/app/logs/access.log"
+    command: sh -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --error-logfile /home/app/log/error.log --access-logfile /home/app/log/access.log"
     restart: always
     volumes:
       - static_volume:/home/app/web/static
