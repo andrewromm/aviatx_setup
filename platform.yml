@@ -83,7 +83,7 @@
 
     - name: Update apt and install docker-ce
       apt:
-        name: docker-ce==5:25.0.5-1~ubuntu.20.04~focal
+        name: docker-ce=5:25.0.5-1~ubuntu.20.04~focal
         state: present
         update_cache: true
       tags: ['full']
