@@ -1,5 +1,5 @@
 # playbook version fill automatically
-playbook_version: 3.10.3
+playbook_version: 3.11.0
 branch: master
 # system users
 _uid: root
@@ -37,6 +37,7 @@ _git_organization: git@github.com:andrewromm
 repos:
   frontend: "{{_git_organization}}/aviatx_frontend.git"
   backend: "{{_git_organization}}/aviatx_backend.git"
+  branch: "{{_local_config.repos_branch|default('main')}}"
 # ########## ssl ##########
 _letsencrypt_test: "{{_local_config.ssl_test|default('true')}}"
 # ########## postgress ##########

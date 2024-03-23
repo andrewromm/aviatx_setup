@@ -11,6 +11,7 @@ BINALIAS=/usr/local/bin/aviatx
 FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 CUSTOM_TASKS_FILE=tasks/custom.yml
+REPOS_BRANCH=main
 
 # state vars
 INSTALLED=""
@@ -242,6 +243,10 @@ request_backend_debug(){
   whiptailInput "BACKEND_DEBUG" "Backend debug mode" "Set backend debug mode (0 or 1)." 8 78
 }
 
+request_repos_branch(){
+  whiptailInput "REPOS_BRANCH" "Repos branch" "Define branch for AviaTX repos." 8 78
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -300,6 +305,7 @@ load_config(){
     PG_PASSWORD=$(awk -F "=" '/pg_password/ {print $2}' $FACT_CONF)
     SSL_TEST=$(awk -F "=" '/ssl_test/ {print $2}' $FACT_CONF)
     BACKEND_DEBUG=$(awk -F "=" '/backend_debug/ {print $2}' $FACT_CONF)
+    REPOS_BRANCH=$(awk -F "=" '/repos_branch/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
 }
@@ -326,6 +332,7 @@ pg_user=${PG_USER}
 pg_password=${PG_PASSWORD}
 ssl_test=${SSL_TEST}
 backend_debug=${BACKEND_DEBUG}
+repos_branch=${REPOS_BRANCH}
 installed=${INSTALLED}""" > $FACT_CONF
 }
 
@@ -390,6 +397,8 @@ initialize(){
   done
   while [ -z "${HOSTALIAS// }" ]; do request_hostalias
   done
+  while [ -z "${REPOS_BRANCH// }" ]; do request_repos_branch
+  done
 }
 
 if [[ -a "$FACT_CONF" ]]; then
@@ -417,7 +426,8 @@ menu() {
   "14" "    Change Email '${EMAIL}'" \
   "15" "    Change SSL Letsencrypt test mode '${SSL_TEST}'" \
   "16" "    Change Backend DEBUG mode '${BACKEND_DEBUG}'" \
-  "17" "    Delete SSH key file" \
+  "17" "    Change repos branch '${REPOS_BRANCH}'" \
+  "18" "    Delete SSH key file" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -435,7 +445,8 @@ menu() {
     "14") request_email ;;
     "15") request_ssl_test ;;
     "16") request_backend_debug ;;
-    "17") delete_ssh_file ;;
+    "17") request_repos_branch ;;
+    "18") delete_ssh_file ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac
