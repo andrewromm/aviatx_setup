@@ -42,7 +42,7 @@
     - name: Cloning Backend
       git:
         repo: '{{repos.backend}}'
-        version: main
+        version: '{{repos.branch}}'
         clone: yes
         force: yes
         accept_hostkey: yes
@@ -57,7 +57,7 @@
     - name: Cloning Frontend
       git:
         repo: '{{repos.frontend}}'
-        version: main
+        version: '{{repos.branch}}'
         clone: yes
         force: yes
         accept_hostkey: yes
