@@ -92,7 +92,7 @@ services:
 
   nginx-proxy-letsencrypt:
     container_name: letsencrypt
-    image: jrcs/letsencrypt-nginx-proxy-companion
+    image: jrcs/letsencrypt-nginx-proxy-companion:2.2
     restart: always
     env_file:
       - {{envs_dir}}/.env.proxy.prod
