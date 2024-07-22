@@ -2,101 +2,101 @@
 - name: Installing platform
   hosts: aviatx
   become: yes
-  
+
   tasks:
-    #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### ##### 
+    #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### #####
 
     - name: Checking python version is 3
       assert:
-        that: 
+        that:
           - "ansible_python_interpreter == '/usr/bin/python3'"
         msg: "Required python 3. Details: https://docs.ansible.com/ansible/latest/reference_appendices/python_3_support.html"
       tags: ["always"]
 
     - name: Build and set permissions for required dirs
       block:
-      - name: Creating directories
-        command: "mkdir -p {{ block_dirs }}"
+        - name: Creating directories
+          command: "mkdir -p {{ block_dirs }}"
 
-      - name: Setting permissions
-        command: "chown {{_uid}}:{{_gid}} {{ block_dirs }}"
+        - name: Setting permissions
+          command: "chown {{_uid}}:{{_gid}} {{ block_dirs }}"
 
       vars:
         block_dirs: "{{ create_dirs|flatten|join(' ') }}"
       tags: ["full"]
 
-    #### ##### ##### ##### #####    Check PostgreSQL    ##### ##### ##### ##### ##### 
-    
+    #### ##### ##### ##### #####    Check PostgreSQL    ##### ##### ##### ##### #####
+
     - name: Check if PostgreSQL db is accessible
       become: yes
       become_user: postgres
       postgresql_info:
         filter:
-        - databases
+          - databases
       register: pg_result
       failed_when: _pg_db not in pg_result.databases.keys()
       tags: ["full"]
 
-    ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### ##### 
+    ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### #####
 
     - name: Cloning Backend
       git:
-        repo: '{{repos.backend}}'
-        version: '{{repos.branch}}'
+        repo: "{{repos.backend}}"
+        version: "{{repos.branch}}"
         clone: yes
         force: yes
         accept_hostkey: yes
-        key_file: '{{_ssh_key}}'
-        dest: '{{backend_dir}}'
+        key_file: "{{_ssh_key}}"
+        dest: "{{backend_dir}}"
         update: yes
       become_user: "{{_uid}}"
-      tags: ['full', 'upgradebackend']
+      tags: ["full", "upgradebackend"]
 
-    ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### ##### 
+    ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### #####
 
-    - name: Cloning Frontend
-      git:
-        repo: '{{repos.frontend}}'
-        version: '{{repos.branch}}'
-        clone: yes
-        force: yes
-        accept_hostkey: yes
-        key_file: '{{_ssh_key}}'
-        dest: '{{frontend_dir}}'
-        update: yes
-      become_user: "{{_uid}}"
-      tags: ['full', 'upgradefrontend']
+    # - name: Cloning Frontend
+    #   git:
+    #     repo: '{{repos.frontend}}'
+    #     version: '{{repos.branch}}'
+    #     clone: yes
+    #     force: yes
+    #     accept_hostkey: yes
+    #     key_file: '{{_ssh_key}}'
+    #     dest: '{{frontend_dir}}'
+    #     update: yes
+    #   become_user: "{{_uid}}"
+    #   tags: ['full', 'upgradefrontend']
 
-    ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### ##### 
+    ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### #####
 
     - name: Add Docker GPG apt Key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
-      tags: ['full']
+      tags: ["full"]
 
     - name: Add Docker Repository
       apt_repository:
         repo: deb https://download.docker.com/linux/ubuntu focal stable
         state: present
-      tags: ['full']
+      tags: ["full"]
 
     - name: Update apt and install docker-ce
       apt:
         name: docker-ce=5:25.0.5-1~ubuntu.20.04~focal
         state: present
         update_cache: true
-      tags: ['full']
+      tags: ["full"]
 
     - name: Install Docker Module for Python
       pip:
         name: docker==6.1.3
-      tags: ['full']
+      tags: ["full"]
 
     - name: Install Docker Compose for Python
       pip:
         name: docker-compose
-      tags: ['full']
+      tags: ["full"]
 
     - name: Docker create media volume
       docker_volume:
@@ -106,70 +106,70 @@
           type: none
           device: "{{media_dir}}"
           o: bind
-      tags: ['full']
+      tags: ["full"]
 
-    ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### ##### 
+    ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### #####
 
     - name: Set backend env variables
       template:
         src: "templates/env_django.yml.j2"
         dest: "{{envs_dir}}/.env.django.prod"
-      tags: ['full']
+      tags: ["full"]
 
-    - name: Set frontend env variables  
+    - name: Set frontend env variables
       template:
         src: "templates/env_nuxtjs.yml.j2"
         dest: "{{envs_dir}}/.env.nuxtjs.prod"
-      tags: ['full']
+      tags: ["full"]
 
     - name: Set nginx proxy env variables
       template:
         src: "templates/env_proxy.yml.j2"
         dest: "{{envs_dir}}/.env.proxy.prod"
-      tags: ['full']
+      tags: ["full"]
 
     - name: Set nginx proxy dockerfile
       template:
         src: "nginx/Dockerfile.yml.j2"
         dest: "{{bootstrap_dir}}/nginx/Dockerfile"
-      tags: ['full']
+      tags: ["full"]
 
     - name: Copy nginx proxy config
       template:
         src: "nginx/vhost.d/custom.yml.j2"
         dest: "{{bootstrap_dir}}/nginx/vhost.d/{{_domain}}"
-      tags: ['full']
+      tags: ["full"]
 
-    ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### ##### 
+    ##### ##### ##### ##### #####    Docker compose    ##### ##### ##### ##### #####
 
     - name: Create docker-compose file
       template:
         src: "templates/docker-compose.yml.j2"
         dest: "{{bootstrap_dir}}/docker-compose.yml"
-      tags: ['full']
+      tags: ["full"]
 
     - name: Tear down existing services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         state: absent
         remove_images: all
-      tags: ['full']
+      tags: ["full"]
 
     - name: Create and start services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         recreate: smart
-      tags: ['full']
+      tags: ["full"]
 
     #### if tag == "upgrade" recompile only containers django and nuxtjs
     - name: Upgrade frontend container
       command: docker-compose up -d --force-recreate --build nuxtjs
       args:
         chdir: "{{bootstrap_dir}}"
-      tags: ['upgradefrontend']
+      tags: ["upgradefrontend"]
 
     - name: Upgrade backend container
       command: docker-compose up -d --force-recreate --build django celery celery-beat
       args:
         chdir: "{{bootstrap_dir}}"
-      tags: ['upgradebackend']
+      tags: ["upgradebackend"]
