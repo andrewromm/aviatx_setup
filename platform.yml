@@ -108,9 +108,13 @@
           o: bind
       tags: ["full"]
 
-    - name: Login Docker hub on selectel
-      run: echo "${{registry.registry_password}}" | docker login "${{registry.url}}" -u "${{ registry.username }}" --password-stdin
+    - name: Log in to Docker registry
+      docker_login:
+        registry: "{{ registry.url }}"
+        username: "{{ registry.username }}"
+        password: "{{ registry.registry_password }}"
       tags: ["full", "upgradefrontend"]
+
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### #####
 
     - name: Set backend env variables
