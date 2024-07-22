@@ -59,7 +59,7 @@ services:
         - django
         - redis
 
-  nuxtjs:
+  nuxtjs-selectel:
     container_name: frontend
     image: cr.selcloud.ru/basic/aviatx_frontend:{{repos.branch}}
     command: npm start
@@ -86,7 +86,7 @@ services:
       - 443:443
       - 80:80
     depends_on:
-      - nuxtjs
+      - nuxtjs-selectel
 
   nginx-proxy-letsencrypt:
     container_name: letsencrypt
