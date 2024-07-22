@@ -112,7 +112,7 @@
       docker_login:
         registry: "{{ registry.url }}"
         username: "{{ registry.username }}"
-        password: "{{ registry.registry_password }}"
+        password: "{{ registry.password }}"
       tags: ["full", "upgradefrontend"]
 
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### #####
