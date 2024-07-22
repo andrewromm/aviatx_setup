@@ -249,7 +249,7 @@ request_repos_branch(){
 }
 
 request_registry_password(){
-  whiptailInput "REGISTRY_PASSWORD" "Repos branch" "Define branch for AviaTX repos." 8 78
+  whiptailInput "REGISTRY_PASSWORD" "Repos branch" "Define registry password for AviaTX repos." 8 78
 }
 
 update_reboot_dialog(){
