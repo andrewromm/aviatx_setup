@@ -12,6 +12,7 @@ FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 CUSTOM_TASKS_FILE=tasks/custom.yml
 REPOS_BRANCH=main
+REGISTRY_PASSWORD=""
 
 # state vars
 INSTALLED=""
@@ -247,6 +248,10 @@ request_repos_branch(){
   whiptailInput "REPOS_BRANCH" "Repos branch" "Define branch for AviaTX repos." 8 78
 }
 
+request_registry_password(){
+  whiptailInput "REGISTRY_PASSWORD" "Repos branch" "Define branch for AviaTX repos." 8 78
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -306,6 +311,7 @@ load_config(){
     SSL_TEST=$(awk -F "=" '/ssl_test/ {print $2}' $FACT_CONF)
     BACKEND_DEBUG=$(awk -F "=" '/backend_debug/ {print $2}' $FACT_CONF)
     REPOS_BRANCH=$(awk -F "=" '/repos_branch/ {print $2}' $FACT_CONF)
+    REGISTRY_PASSWORD=$(awk -F "=" '/registry_password/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
 }
@@ -333,6 +339,7 @@ pg_password=${PG_PASSWORD}
 ssl_test=${SSL_TEST}
 backend_debug=${BACKEND_DEBUG}
 repos_branch=${REPOS_BRANCH}
+registry_password=${REGISTRY_PASSWORD}
 installed=${INSTALLED}""" > $FACT_CONF
 }
 
@@ -399,6 +406,8 @@ initialize(){
   done
   while [ -z "${REPOS_BRANCH// }" ]; do request_repos_branch
   done
+  while [ -z "${REGISTRY_PASSWORD// }" ]; do request_registry_password
+  done
 }
 
 if [[ -a "$FACT_CONF" ]]; then
@@ -427,7 +436,8 @@ menu() {
   "15" "    Change SSL Letsencrypt test mode '${SSL_TEST}'" \
   "16" "    Change Backend DEBUG mode '${BACKEND_DEBUG}'" \
   "17" "    Change repos branch '${REPOS_BRANCH}'" \
-  "18" "    Delete SSH key file" \
+  "18" "    Change registry password" \
+  "19" "    Delete SSH key file" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -446,7 +456,8 @@ menu() {
     "15") request_ssl_test ;;
     "16") request_backend_debug ;;
     "17") request_repos_branch ;;
-    "18") delete_ssh_file ;;
+    "18") request_registry_password ;;
+    "19") delete_ssh_file ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac

@@ -61,9 +61,7 @@ services:
 
   nuxtjs:
     container_name: frontend
-    build:
-      context: {{frontend_dir}}
-      dockerfile: Dockerfile.prod
+    image: cr.selcloud.ru/basic/aviatx_frontend:{{repos.branch}}
     command: npm start
     restart: always
     expose:

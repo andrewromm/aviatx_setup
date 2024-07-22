@@ -20,24 +20,34 @@ setup_server: yes
 # ########## Domains ##########
 _domain: "{{_local_config.domain|default(ansible_host)}}"
 # ########## dirs ##########
-bootstrap_dir: '/srv/aviatx/bootstrap'
-home_dir: '/srv/aviatx/platform'
-backend_dir: '{{home_dir}}/backend'
-frontend_dir: '{{home_dir}}/frontend'
-envs_dir: '{{home_dir}}/envs'
-media_dir: '{{home_dir}}/media'
-fake_db_dir: '{{home_dir}}/db'
-pg_db_dir: '/srv/aviatx/pg'
+bootstrap_dir: "/srv/aviatx/bootstrap"
+home_dir: "/srv/aviatx/platform"
+backend_dir: "{{home_dir}}/backend"
+frontend_dir: "{{home_dir}}/frontend"
+envs_dir: "{{home_dir}}/envs"
+media_dir: "{{home_dir}}/media"
+fake_db_dir: "{{home_dir}}/db"
+pg_db_dir: "/srv/aviatx/pg"
 create_dirs:
-  - ["{{ backend_dir }}", "{{ media_dir }}", "{{ fake_db_dir }}", "{{ frontend_dir }}", "{{ envs_dir }}", ]
+  - [
+      "{{ backend_dir }}",
+      "{{ media_dir }}",
+      "{{ fake_db_dir }}",
+      "{{ frontend_dir }}",
+      "{{ envs_dir }}",
+    ]
 # ########## ssh key ##########
-_ssh_key: '/srv/aviatx/ssh/aviatx_rsa'
+_ssh_key: "/srv/aviatx/ssh/aviatx_rsa"
 # ########## repos ##########
 _git_organization: git@github.com:andrewromm
 repos:
   frontend: "{{_git_organization}}/aviatx_frontend.git"
   backend: "{{_git_organization}}/aviatx_backend.git"
   branch: "{{_local_config.repos_branch|default('main')}}"
+registry:
+  url: cr.selcloud.ru
+  username: token
+  password: "{{_local_config.registry_password|default('')}}"
 # ########## ssl ##########
 _letsencrypt_test: "{{_local_config.ssl_test|default('true')}}"
 # ########## postgress ##########
