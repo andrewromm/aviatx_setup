@@ -169,6 +169,12 @@
       tags: ["full"]
 
     #### if tag == "upgrade" recompile only containers django and nuxtjs
+    - name: Pull new repositories
+      command: docker-compose pull
+      args:
+        chdir: "{{bootstrap_dir}}"
+      tags: ["upgradefrontend", "upgradebackend"]
+
     - name: Upgrade frontend container
       command: docker-compose up -d --force-recreate nuxtjs-selectel
       args:
