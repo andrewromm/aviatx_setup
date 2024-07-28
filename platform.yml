@@ -39,18 +39,18 @@
 
     ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### #####
 
-    - name: Cloning Backend
-      git:
-        repo: "{{repos.backend}}"
-        version: "{{repos.branch}}"
-        clone: yes
-        force: yes
-        accept_hostkey: yes
-        key_file: "{{_ssh_key}}"
-        dest: "{{backend_dir}}"
-        update: yes
-      become_user: "{{_uid}}"
-      tags: ["full", "upgradebackend"]
+    # - name: Cloning Backend
+    #   git:
+    #     repo: "{{repos.backend}}"
+    #     version: "{{repos.branch}}"
+    #     clone: yes
+    #     force: yes
+    #     accept_hostkey: yes
+    #     key_file: "{{_ssh_key}}"
+    #     dest: "{{backend_dir}}"
+    #     update: yes
+    #   become_user: "{{_uid}}"
+    #   tags: ["full", "upgradebackend"]
 
     ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### #####
 
@@ -113,7 +113,7 @@
         registry: "{{ registry.url }}"
         username: "{{ registry.username }}"
         password: "{{ registry.password }}"
-      tags: ["full", "upgradefrontend"]
+      tags: ["full", "upgradefrontend", "upgradebackend"]
 
     ##### ##### ##### ##### #####    Setting envs    ##### ##### ##### ##### #####
 
@@ -182,7 +182,7 @@
       tags: ["upgradefrontend"]
 
     - name: Upgrade backend container
-      command: docker-compose up -d --force-recreate --build django celery celery-beat
+      command: docker-compose up -d --force-recreate django celery celery-beat
       args:
         chdir: "{{bootstrap_dir}}"
       tags: ["upgradebackend"]
