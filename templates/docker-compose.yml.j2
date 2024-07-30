@@ -4,7 +4,7 @@ services:
   django:
     container_name: backend
     image: cr.selcloud.ru/basic/aviatx_backend:{{repos.branch}}
-    command: sh -c "cd {{backend_dir}}/backend && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --error-logfile /home/app/web/log/error.log"
+    command: sh -c "cd backend && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --error-logfile /home/app/web/log/error.log"
     restart: always
     volumes:
       - static_volume:/home/app/web/static
@@ -24,7 +24,7 @@ services:
   celery:
     container_name: celery
     image: cr.selcloud.ru/basic/aviatx_backend:{{repos.branch}}
-    command: cd {{backend_dir}}/backend && celery -A backend worker --loglevel=debug --concurrency=4 -l info
+    command: sh -c "cd backend && celery -A backend worker --loglevel=debug --concurrency=4 -l info"
     restart: always
     volumes:
         - .:/usr/src/app
@@ -41,7 +41,7 @@ services:
   celery-beat:
     container_name: celery-beat
     image: cr.selcloud.ru/basic/aviatx_backend:{{repos.branch}}
-    command: cd {{backend_dir}}/backend && celery -A backend beat -l info
+    command: sh -c "cd backend && celery -A backend beat -l info"
     restart: always
     volumes:
         - .:/usr/src/app
