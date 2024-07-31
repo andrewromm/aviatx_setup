@@ -7,8 +7,8 @@ services:
     command: sh -c "cd backend && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --error-logfile /home/app/web/log/error.log"
     restart: always
     volumes:
-      - static_volume:/home/app/web/static
-      - media_volume:/home/app/web/media
+      - static_volume:/home/app/web/backend/static
+      - media_volume:/home/app/web/backend/media
     expose:
       - 8000
     extra_hosts:
@@ -28,8 +28,8 @@ services:
     restart: always
     volumes:
         - .:/usr/src/app
-        - static_volume:/home/app/web/static
-        - media_volume:/home/app/web/media
+        - static_volume:/home/app/web/backend/static
+        - media_volume:/home/app/web/backend/media
     extra_hosts:
       - "host.docker.internal:host-gateway"
     env_file:
@@ -70,8 +70,8 @@ services:
     build: {{bootstrap_dir}}/nginx
     restart: always
     volumes:
-      - static_volume:/home/app/web/static
-      - media_volume:/home/app/web/media
+      - static_volume:/home/app/web/backend/static
+      - media_volume:/home/app/web/backend/media
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
