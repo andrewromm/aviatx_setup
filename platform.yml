@@ -3,6 +3,9 @@
   hosts: aviatx
   become: yes
 
+  vars:
+    compose_version: "v2.22.0" # Update to the latest stable version
+
   tasks:
     #### ##### ##### ##### #####    Check is python 3    ##### ##### ##### ##### #####
 
@@ -98,16 +101,46 @@
     #     name: docker-compose
     #   tags: ["full"]
 
+    - name: Get system architecture
+      command: uname -m
+      register: arch_result
+      tags: ["full"]
+
+    - name: Set Docker Compose URL based on architecture
+      set_fact:
+        compose_url: >-
+          {% if arch_result.stdout == 'x86_64' %}
+          https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-linux-x86_64
+          {% elif arch_result.stdout == 'aarch64' %}
+          https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-linux-aarch64
+          {% elif arch_result.stdout == 'armv7l' %}
+          https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-linux-armv7
+          {% else %}
+          Unsupported architecture
+          {% endif %}
+      tags: ["full"]
+
+    - name: Fail if unsupported architecture
+      fail:
+        msg: "Unsupported architecture for Docker Compose"
+      when: compose_url == "Unsupported architecture"
+      tags: ["full"]
+
     - name: Download Docker Compose v2
       get_url:
-        url: https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-darwin-x86_64
+        url: "{{ compose_url }}"
         dest: /usr/local/bin/docker-compose
         mode: "0755"
       tags: ["full"]
 
     - name: Verify Docker Compose v2 installation
-      command: docker-compose --version
+      command: /usr/local/bin/docker-compose --version
       register: result
+      tags: ["full"]
+
+    - name: Display Docker Compose version
+      debug:
+        msg: "{{ result.stdout }}"
       tags: ["full"]
 
     - name: Docker create media volume
