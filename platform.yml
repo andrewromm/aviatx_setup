@@ -166,6 +166,24 @@
     - name: Create and start services
       docker_compose:
         project_src: "{{bootstrap_dir}}"
-        pull: true
         recreate: smart
-      tags: ["full", "upgradefrontend", "upgradebackend"]
+      tags: ["full"]
+
+    #### if tag == "upgrade" recompile only containers django and nuxtjs
+    - name: Pull new repositories
+      command: docker-compose pull
+      args:
+        chdir: "{{bootstrap_dir}}"
+      tags: ["upgradefrontend", "upgradebackend"]
+
+    - name: Upgrade frontend container
+      command: docker-compose up -d --force-recreate nuxtjs-selectel
+      args:
+        chdir: "{{bootstrap_dir}}"
+      tags: ["upgradefrontend"]
+
+    - name: Upgrade backend container
+      command: docker-compose up -d --force-recreate django celery celery-beat
+      args:
+        chdir: "{{bootstrap_dir}}"
+      tags: ["upgradebackend"]
