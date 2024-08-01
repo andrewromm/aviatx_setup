@@ -376,22 +376,22 @@ delete_ssh_file(){
 
 initialize(){
   # check if ssh_key exists if not create
-  print_status "Checking SSH key"
-  if [ ! -d "$SSH_DIR" ]; then
-    mkdir -p "$SSH_DIR"
-  fi
-  if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
-      nano "$SSH_DIR/$SSH_FILE"
-      if [ -f "$SSH_DIR/$SSH_FILE" ]; then
-          chmod 0600 "$SSH_DIR/$SSH_FILE"
-          echo "SSH key file created at $SSH_DIR/$SSH_FILE"
-      else
-          echo "Failed to create SSH key file"
-          exit 1
-      fi
-  else
-      echo "SSH key file already exists at $SSH_DIR/$SSH_FILE"
-  fi
+  # print_status "Checking SSH key"
+  # if [ ! -d "$SSH_DIR" ]; then
+  #   mkdir -p "$SSH_DIR"
+  # fi
+  # if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
+  #     nano "$SSH_DIR/$SSH_FILE"
+  #     if [ -f "$SSH_DIR/$SSH_FILE" ]; then
+  #         chmod 0600 "$SSH_DIR/$SSH_FILE"
+  #         echo "SSH key file created at $SSH_DIR/$SSH_FILE"
+  #     else
+  #         echo "Failed to create SSH key file"
+  #         exit 1
+  #     fi
+  # else
+  #     echo "SSH key file already exists at $SSH_DIR/$SSH_FILE"
+  # fi
 
   #########################
   while [ -z "${EMAIL// }" ]; do request_email
