@@ -103,10 +103,12 @@
         url: https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-darwin-x86_64
         dest: /usr/local/bin/docker-compose
         mode: "0755"
+      tags: ["full"]
 
     - name: Verify Docker Compose v2 installation
       command: docker-compose --version
       register: result
+      tags: ["full"]
 
     - name: Docker create media volume
       docker_volume:
