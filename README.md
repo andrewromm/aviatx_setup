@@ -36,3 +36,5 @@ docker volume rm $(docker volume ls -q)
 # Удаление всех пользовательских сетей (опционально)
 
 docker network rm $(docker network ls -q)
+
+<!-- CRgAAAAA8J8aM8APA53hnvPIXp0NLN7phueVNvu4 -->
