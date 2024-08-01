@@ -93,10 +93,20 @@
         name: docker
       tags: ["full"]
 
-    - name: Install Docker Compose for Python
-      pip:
-        name: docker-compose
-      tags: ["full"]
+    # - name: Install Docker Compose for Python
+    #   pip:
+    #     name: docker-compose
+    #   tags: ["full"]
+
+    - name: Download Docker Compose v2
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.29.1/docker-compose-darwin-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: "0755"
+
+    - name: Verify Docker Compose v2 installation
+      command: docker-compose --version
+      register: result
 
     - name: Docker create media volume
       docker_volume:
@@ -170,19 +180,19 @@
 
     #### if tag == "upgrade" recompile only containers django and nuxtjs
     - name: Pull new repositories
-      command: docker compose pull
+      command: docker-compose pull
       args:
         chdir: "{{bootstrap_dir}}"
       tags: ["upgradefrontend", "upgradebackend"]
 
     - name: Upgrade frontend container
-      command: docker compose up -d --force-recreate nuxtjs-selectel
+      command: docker-compose up -d --force-recreate nuxtjs-selectel
       args:
         chdir: "{{bootstrap_dir}}"
       tags: ["upgradefrontend"]
 
     - name: Upgrade backend container
-      command: docker compose up -d --force-recreate django celery celery-beat
+      command: docker-compose up -d --force-recreate django celery celery-beat
       args:
         chdir: "{{bootstrap_dir}}"
       tags: ["upgradebackend"]
