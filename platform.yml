@@ -136,6 +136,12 @@
         dest: "{{envs_dir}}/.env.proxy.prod"
       tags: ["full"]
 
+    - name: Set zabbix env variables
+      template:
+        src: "templates/env_zabbix.yml.j2"
+        dest: "{{envs_dir}}/.env.zabbix.prod"
+      tags: ["full"]
+
     - name: Set nginx proxy dockerfile
       template:
         src: "nginx/Dockerfile.yml.j2"

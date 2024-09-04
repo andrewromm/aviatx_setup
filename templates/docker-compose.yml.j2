@@ -97,6 +97,17 @@ services:
     depends_on:
       - nginx-proxy
 
+  zabbix-agent:
+    container_name: zabbix-agent
+    image: zabbix/zabbix-agent:ubuntu-7.0-latest
+    restart: always
+    env_file:
+      - {{envs_dir}}/.env.zabbix.prod
+    volumes:
+      - /:/host:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: host
+
 volumes:
   static_volume:
   media_volume:
