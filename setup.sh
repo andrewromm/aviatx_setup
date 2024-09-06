@@ -281,6 +281,9 @@ run_postgresql_setup() { # (tags, custom)
 }
 
 run_platform_playbook() { # (tags, custom)
+  print_status "Remove all docker images"
+  cmd="docker stop \$(docker ps -a -q) && docker rm \$(docker ps -a -q)"
+  cmd="docker rmi -f \$(docker images -q)"
   print_status "Starting ansible"
   cmd="platform.yml --connection=local --tags=${1} $ANS_PY $ANS_BRANCH ${2}"
   echo "executing ansible-playbook ${cmd}"
