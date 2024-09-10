@@ -77,13 +77,13 @@
 
     - name: Add Docker Repository
       apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
         state: present
       tags: ["full"]
 
     - name: Update apt and install docker-ce
       apt:
-        name: docker-ce=5:25.0.5-1~ubuntu.20.04~focal
+        name: docker-ce=5:25.0.5-1~ubuntu.22.04~jammy
         state: present
         update_cache: true
         allow_downgrade: yes
