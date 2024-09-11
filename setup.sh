@@ -331,7 +331,9 @@ ${HOSTALIAS}
 }
 
 setup_envs() {
+  print_status "Setting up environment variables"
   export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+  print_ok
 }
 
 save_config(){
