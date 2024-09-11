@@ -108,6 +108,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     network_mode: host
     privileged: true
+    group_add:
+      - "root"
 
 volumes:
   static_volume:
