@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 VERSION=4.0.5
 BOOTSTRAP_BRANCH=${BRANCH:-master}
@@ -417,9 +417,6 @@ if [[ -a "$FACT_CONF" ]]; then
   print_status "Reading local configuration"
   load_config
 fi
-
-print_status "Setting up environment variables"
-source $BOOTSTRAP_DIR/set_env.sh
 
 print_status "Preparing system"
 if [ "$INSTALLED" == "$VERSION" ]; then update_platform; fi
