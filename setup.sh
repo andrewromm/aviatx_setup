@@ -330,6 +330,10 @@ ${HOSTALIAS}
 """ > inventory/private
 }
 
+setup_envs() {
+  export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+}
+
 save_config(){
   save_inventory \
   && mkdir -p $(dirname $FACT_CONF) \
@@ -359,6 +363,7 @@ setup_platform(){
   setup_python_packages
   setup_runner
   setup_playbook
+  setup_envs
   INSTALLED=$VERSION
   save_config
 }
