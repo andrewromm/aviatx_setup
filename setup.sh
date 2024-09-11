@@ -419,7 +419,7 @@ if [[ -a "$FACT_CONF" ]]; then
 fi
 
 print_status "Setting up environment variables"
-export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+source $BOOTSTRAP_DIR/set_env.sh
 echo $DOCKER_GROUP_ID
 
 print_status "Preparing system"
