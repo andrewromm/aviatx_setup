@@ -109,7 +109,7 @@ services:
     network_mode: host
     privileged: true
     group_add:
-      - "root"
+      - "${DOCKER_GROUP_ID:-998}"
 
 volumes:
   static_volume:
