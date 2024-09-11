@@ -330,12 +330,6 @@ ${HOSTALIAS}
 """ > inventory/private
 }
 
-setup_envs() {
-  print_status "Setting up environment variables"
-  export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
-  print_ok
-}
-
 save_config(){
   save_inventory \
   && mkdir -p $(dirname $FACT_CONF) \
@@ -365,7 +359,6 @@ setup_platform(){
   setup_python_packages
   setup_runner
   setup_playbook
-  setup_envs
   INSTALLED=$VERSION
   save_config
 }
@@ -429,6 +422,10 @@ print_status "Preparing system"
 if [ "$INSTALLED" == "$VERSION" ]; then update_platform; fi
 while [ "$INSTALLED" != "$VERSION" ]; do setup_platform
 done
+
+print_status "Setting up environment variables"
+export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+
 
 MENU_TEXT="\nChoose an option:\n"
 
