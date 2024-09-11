@@ -420,6 +420,7 @@ fi
 
 print_status "Setting up environment variables"
 export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+echo $DOCKER_GROUP_ID
 
 print_status "Preparing system"
 if [ "$INSTALLED" == "$VERSION" ]; then update_platform; fi
