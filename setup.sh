@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 VERSION=4.0.5
 BOOTSTRAP_BRANCH=${BRANCH:-master}
@@ -420,7 +420,6 @@ fi
 
 print_status "Setting up environment variables"
 source $BOOTSTRAP_DIR/set_env.sh
-echo $DOCKER_GROUP_ID
 
 print_status "Preparing system"
 if [ "$INSTALLED" == "$VERSION" ]; then update_platform; fi
