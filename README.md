@@ -36,3 +36,6 @@ docker volume rm $(docker volume ls -q)
 # Удаление всех пользовательских сетей (опционально)
 
 docker network rm $(docker network ls -q)
+
+
+export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
