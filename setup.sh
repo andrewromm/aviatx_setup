@@ -418,14 +418,13 @@ if [[ -a "$FACT_CONF" ]]; then
   load_config
 fi
 
+print_status "Setting up environment variables"
+export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+
 print_status "Preparing system"
 if [ "$INSTALLED" == "$VERSION" ]; then update_platform; fi
 while [ "$INSTALLED" != "$VERSION" ]; do setup_platform
 done
-
-print_status "Setting up environment variables"
-export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
-
 
 MENU_TEXT="\nChoose an option:\n"
 
