@@ -343,6 +343,7 @@ ssl_test=${SSL_TEST}
 backend_debug=${BACKEND_DEBUG}
 repos_branch=${REPOS_BRANCH}
 registry_password=${REGISTRY_PASSWORD}
+docker_gid=$(getent group docker | cut -d: -f3)
 installed=${INSTALLED}""" > $FACT_CONF
 }
 
