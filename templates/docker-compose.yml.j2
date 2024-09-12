@@ -110,7 +110,7 @@ services:
     network_mode: host
     privileged: true
     group_add:
-      - ${DOCKER_GROUP_ID}
+      - {{_docker_gid}}
 
 volumes:
   static_volume:

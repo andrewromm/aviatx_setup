@@ -56,4 +56,4 @@ _pg_db: aviatx
 _pg_user: "{{_local_config.pg_user|default('user')}}"
 _pg_password: "{{_local_config.pg_password|default('password')}}"
 # ########## Docker groupd GID ##########
-_docker_gid: "{{_local_config.docker_gid|default(999)}}"
+_docker_gid: "{{_local_config.docker_gid}}"
