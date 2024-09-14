@@ -153,7 +153,7 @@
       tags: ["upgradefrontend", "upgradebackend"]
 
     - name: Upgrade frontend container
-      command: docker-compose up -d --force-recreate nuxtjs-selectel
+      command: docker-compose up -d --force-recreate nuxtjs
       args:
         chdir: "{{bootstrap_dir}}"
       tags: ["upgradefrontend"]
