@@ -37,36 +37,6 @@
       failed_when: _pg_db not in pg_result.databases.keys()
       tags: ["full"]
 
-    ##### ##### ##### ##### #####    Backend    ##### ##### ##### ##### #####
-
-    # - name: Cloning Backend
-    #   git:
-    #     repo: "{{repos.backend}}"
-    #     version: "{{repos.branch}}"
-    #     clone: yes
-    #     force: yes
-    #     accept_hostkey: yes
-    #     key_file: "{{_ssh_key}}"
-    #     dest: "{{backend_dir}}"
-    #     update: yes
-    #   become_user: "{{_uid}}"
-    #   tags: ["full", "upgradebackend"]
-
-    ##### ##### ##### ##### #####    Frontend    ##### ##### ##### ##### #####
-
-    # - name: Cloning Frontend
-    #   git:
-    #     repo: '{{repos.frontend}}'
-    #     version: '{{repos.branch}}'
-    #     clone: yes
-    #     force: yes
-    #     accept_hostkey: yes
-    #     key_file: '{{_ssh_key}}'
-    #     dest: '{{frontend_dir}}'
-    #     update: yes
-    #   become_user: "{{_uid}}"
-    #   tags: ['full', 'upgradefrontend']
-
     ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### #####
 
     - name: Add Docker GPG apt Key

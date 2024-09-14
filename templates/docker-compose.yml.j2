@@ -3,7 +3,7 @@ version: "3.8"
 services:
   django:
     container_name: backend
-    image: cr.selcloud.ru/basic/aviatx_backend:{{repos.branch}}
+    image: cr.selcloud.ru/basic/aviatx_backend:{{repos.backend_branch}}
     command: sh -c "cd backend && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --error-logfile /home/app/web/log/error.log"
     restart: always
     volumes:
@@ -23,7 +23,7 @@ services:
 
   celery:
     container_name: celery
-    image: cr.selcloud.ru/basic/aviatx_backend:{{repos.branch}}
+    image: cr.selcloud.ru/basic/aviatx_backend:{{repos.backend_branch}}
     command: sh -c "cd backend && celery -A backend worker --loglevel=debug --concurrency=4 -l info"
     restart: always
     volumes:
@@ -40,7 +40,7 @@ services:
 
   celery-beat:
     container_name: celery-beat
-    image: cr.selcloud.ru/basic/aviatx_backend:{{repos.branch}}
+    image: cr.selcloud.ru/basic/aviatx_backend:{{repos.backend_branch}}
     command: sh -c "cd backend && celery -A backend beat -l info"
     restart: always
     volumes:
@@ -55,7 +55,7 @@ services:
 
   nuxtjs-selectel:
     container_name: frontend
-    image: cr.selcloud.ru/basic/aviatx_frontend:{{repos.branch}}
+    image: cr.selcloud.ru/basic/aviatx_frontend:{{repos.frontend_branch}}
     command: npm start
     restart: always
     expose:

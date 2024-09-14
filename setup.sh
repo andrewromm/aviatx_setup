@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
 
-VERSION=4.0.5
+VERSION=4.0.8
 BOOTSTRAP_BRANCH=${BRANCH:-master}
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
-SSH_DIR=/srv/aviatx/ssh
-SSH_FILE=aviatx_rsa
 KICKSTART_CMD="sudo -E bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/${BOOTSTRAP_BRANCH}/setup.sh)\""
 BINALIAS=/usr/local/bin/aviatx
 FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 CUSTOM_TASKS_FILE=tasks/custom.yml
-REPOS_BRANCH=main
+FRONTEND_BRANCH=main
+BACKEND_BRANCH=main
 REGISTRY_PASSWORD=""
 
 # state vars
@@ -244,12 +243,16 @@ request_backend_debug(){
   whiptailInput "BACKEND_DEBUG" "Backend debug mode" "Set backend debug mode (0 or 1)." 8 78
 }
 
-request_repos_branch(){
-  whiptailInput "REPOS_BRANCH" "Repos branch" "Define branch for AviaTX repos." 8 78
+request_frontend_branch(){
+  whiptailInput "FRONTEND_BRANCH" "Frontend branch" "Define frontend branch for AviaTX repos." 8 78
+}
+
+request_backend_branch(){
+  whiptailInput "BACKEND_BRANCH" "Backend branch" "Define backend branch for AviaTX repos." 8 78
 }
 
 request_registry_password(){
-  whiptailInput "REGISTRY_PASSWORD" "Repos branch" "Define registry password for AviaTX repos." 8 78
+  whiptailInput "REGISTRY_PASSWORD" "Container registry" "Define registry password for AviaTX repos." 8 78
 }
 
 update_reboot_dialog(){
@@ -313,7 +316,8 @@ load_config(){
     PG_PASSWORD=$(awk -F "=" '/pg_password/ {print $2}' $FACT_CONF)
     SSL_TEST=$(awk -F "=" '/ssl_test/ {print $2}' $FACT_CONF)
     BACKEND_DEBUG=$(awk -F "=" '/backend_debug/ {print $2}' $FACT_CONF)
-    REPOS_BRANCH=$(awk -F "=" '/repos_branch/ {print $2}' $FACT_CONF)
+    FRONTEND_BRANCH=$(awk -F "=" '/frontend_branch/ {print $2}' $FACT_CONF)
+    BACKEND_BRANCH=$(awk -F "=" '/backend_branch/ {print $2}' $FACT_CONF)
     REGISTRY_PASSWORD=$(awk -F "=" '/registry_password/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
@@ -341,7 +345,8 @@ pg_user=${PG_USER}
 pg_password=${PG_PASSWORD}
 ssl_test=${SSL_TEST}
 backend_debug=${BACKEND_DEBUG}
-repos_branch=${REPOS_BRANCH}
+frontend_branch=${FRONTEND_BRANCH}
+backend_branch=${BACKEND_BRANCH}
 registry_password=${REGISTRY_PASSWORD}
 docker_gid=$(getent group docker | cut -d: -f3)
 installed=${INSTALLED}""" > $FACT_CONF
@@ -369,35 +374,7 @@ update_platform(){
   setup_runner
 }
 
-delete_ssh_file(){
-  if [ -f "$SSH_DIR/$SSH_FILE" ]; then
-    rm "$SSH_DIR/$SSH_FILE"
-    echo "SSH key file deleted: $SSH_DIR/$SSH_FILE"
-  else
-    echo "SSH key file does not exist: $SSH_DIR/$SSH_FILE"
-  fi
-}
-
 initialize(){
-  # check if ssh_key exists if not create
-  # print_status "Checking SSH key"
-  # if [ ! -d "$SSH_DIR" ]; then
-  #   mkdir -p "$SSH_DIR"
-  # fi
-  # if [ ! -f "$SSH_DIR/$SSH_FILE" ]; then
-  #     nano "$SSH_DIR/$SSH_FILE"
-  #     if [ -f "$SSH_DIR/$SSH_FILE" ]; then
-  #         chmod 0600 "$SSH_DIR/$SSH_FILE"
-  #         echo "SSH key file created at $SSH_DIR/$SSH_FILE"
-  #     else
-  #         echo "Failed to create SSH key file"
-  #         exit 1
-  #     fi
-  # else
-  #     echo "SSH key file already exists at $SSH_DIR/$SSH_FILE"
-  # fi
-
-  #########################
   while [ -z "${EMAIL// }" ]; do request_email
   done
   while [ -z "${DOMAIN// }" ]; do request_domain
@@ -408,7 +385,9 @@ initialize(){
   done
   while [ -z "${HOSTALIAS// }" ]; do request_hostalias
   done
-  while [ -z "${REPOS_BRANCH// }" ]; do request_repos_branch
+  while [ -z "${FRONTEND_BRANCH// }" ]; do request_frontend_branch
+  done
+  while [ -z "${BACKEND_BRANCH// }" ]; do request_backend_branch
   done
   while [ -z "${REGISTRY_PASSWORD// }" ]; do request_registry_password
   done
@@ -439,9 +418,9 @@ menu() {
   "14" "    Change Email '${EMAIL}'" \
   "15" "    Change SSL Letsencrypt test mode '${SSL_TEST}'" \
   "16" "    Change Backend DEBUG mode '${BACKEND_DEBUG}'" \
-  "17" "    Change repos branch '${REPOS_BRANCH}'" \
-  "18" "    Change registry password" \
-  "19" "    Delete SSH key file" \
+  "17" "    Change frontend branch '${FRONTEND_BRANCH}'" \
+  "18" "    Change backend branch '${BACKEND_BRANCH}'" \
+  "19" "    Change registry password" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -459,9 +438,9 @@ menu() {
     "14") request_email ;;
     "15") request_ssl_test ;;
     "16") request_backend_debug ;;
-    "17") request_repos_branch ;;
-    "18") request_registry_password ;;
-    "19") delete_ssh_file ;;
+    "17") request_frontend_branch ;;
+    "18") request_backend_branch ;;
+    "19") request_registry_password ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac
