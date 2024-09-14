@@ -130,7 +130,7 @@
       template:
         src: "templates/docker-compose.yml.j2"
         dest: "{{bootstrap_dir}}/docker-compose.yml"
-      tags: ["full"]
+      tags: ["full", "upgradefrontend", "upgradebackend"]
 
     - name: Tear down existing services
       docker_compose:
