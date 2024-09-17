@@ -17,25 +17,4 @@ cd /var/lib/postgresql/
 
 ## DOCKER
 
-# Остановка всех контейнеров
-
-docker stop $(docker ps -q)
-
-# Удаление всех контейнеров
-
-docker rm $(docker ps -a -q)
-
-# Удаление всех образов
-
-docker rmi $(docker images -q)
-
-# Удаление всех томов
-
-docker volume rm $(docker volume ls -q)
-
-# Удаление всех пользовательских сетей (опционально)
-
-docker network rm $(docker network ls -q)
-
-
 export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
