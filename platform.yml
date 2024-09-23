@@ -92,13 +92,13 @@
       template:
         src: "templates/env_django.yml.j2"
         dest: "{{envs_dir}}/.env.django.prod"
-      tags: ["full"]
+      tags: ["full", "upgradebackend"]
 
     - name: Set frontend env variables
       template:
         src: "templates/env_nuxtjs.yml.j2"
         dest: "{{envs_dir}}/.env.nuxtjs.prod"
-      tags: ["full"]
+      tags: ["full", "upgradefrontend"]
 
     - name: Set nginx proxy env variables
       template:
