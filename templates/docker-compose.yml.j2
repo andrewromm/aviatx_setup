@@ -17,7 +17,7 @@ services:
       - {{envs_dir}}/.env.django.prod
 
   django-asgi:
-    container_name: backend
+    container_name: backend-asgi
     image: cr.selcloud.ru/basic/aviatx_backend:{{repos.backend_branch}}
     command: sh -c "cd backend && python manage.py collectstatic --noinput && gunicorn backend.asgi:application -c backend/gunicorn_asgi.conf.py"
     restart: always
