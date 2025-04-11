@@ -4,7 +4,7 @@ services:
   django:
     container_name: backend
     image: cr.selcloud.ru/basic/aviatx_backend:{{repos.backend_branch}}
-    command: sh -c "cd backend && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --error-logfile /home/app/web/log/error.log"
+    command: sh -c "cd backend && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn backend.wsgi:application -c backend/gunicorn_wsgi.conf.py"
     restart: always
     volumes:
       - static_volume:/home/app/web/backend/static
@@ -15,6 +15,23 @@ services:
       - "host.docker.internal:host-gateway"
     env_file:
       - {{envs_dir}}/.env.django.prod
+
+  django-asgi:
+    container_name: backend
+    image: cr.selcloud.ru/basic/aviatx_backend:{{repos.backend_branch}}
+    command: sh -c "cd backend && python manage.py collectstatic --noinput && gunicorn backend.asgi:application -c backend/gunicorn_asgi.conf.py"
+    restart: always
+    volumes:
+      - static_volume:/home/app/web/backend/static
+      - media_volume:/home/app/web/backend/media
+    expose:
+      - 8001
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - {{envs_dir}}/.env.django.asgi.prod
+    depends_on:
+      - django
 
   redis:
     container_name: redis
@@ -36,6 +53,7 @@ services:
         - {{envs_dir}}/.env.django.prod
     depends_on:
         - django
+        - django-asgi
         - redis
 
   celery-beat:
@@ -51,6 +69,7 @@ services:
         - {{envs_dir}}/.env.django.prod
     depends_on:
         - django
+        - django-asgi
         - redis
 
   nuxtjs:
@@ -64,6 +83,7 @@ services:
       - {{envs_dir}}/.env.nuxtjs.prod
     depends_on:
       - django
+      - django-asgi
 
   nginx-proxy:
     container_name: nginx-proxy

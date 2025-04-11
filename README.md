@@ -18,3 +18,8 @@ cd /var/lib/postgresql/
 ## DOCKER
 
 export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
+
+
+## ZABBIX
+
+grep zabbix /etc/group
