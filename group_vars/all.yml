@@ -1,13 +1,12 @@
 # playbook version fill automatically
 playbook_version: 3.11.0
-branch: "{{_local_config.bootstrap_branch|default('master')}}"
+bootstrap_branch: "{{_local_config.bootstrap_branch|default('master')}}"
 # system users
 _uid: root
 _gid: root
 # ########## emitting configuration ##########
 customs: "{{_customs|default({})}}"
 _local_config: "{{ (ansible_local.config|default({})).general|default({}) }}"
-_tag: "{{ (branch == 'master')|ternary('latest', branch) }}"
 _email: "{{ email|default(_local_config.email|default('hello@example.com'))}}"
 _frontend_port: "3000"
 _backend_port: "8000"

@@ -326,6 +326,12 @@ load_config(){
     REGISTRY_PASSWORD=$(awk -F "=" '/registry_password/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
+  echo "Loaded configuration:"
+  echo "  DOMAIN: $DOMAIN"
+  echo "  BACKEND_DEBUG: $BACKEND_DEBUG"
+  echo "  FRONTEND_BRANCH: $FRONTEND_BRANCH"
+  echo "  BACKEND_BRANCH: $BACKEND_BRANCH"
+  echo "  BOOTSTRAP_BRANCH: $BOOTSTRAP_BRANCH"
 }
 
 save_inventory(){
