@@ -2,7 +2,11 @@
 
 ## Step 1: Run setup script
 
+### master branch
 sudo -E bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/master/setup.sh)"
+
+### dev branch
+sudo -E bash -c "$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/dev/setup.sh)"
 
 ## Step 2: Restore pg_db
 

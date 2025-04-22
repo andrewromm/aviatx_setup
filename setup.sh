@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 VERSION=4.0.8
-BOOTSTRAP_BRANCH=${BRANCH:-master}
+BOOTSTRAP_BRANCH=master
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
 KICKSTART_CMD="sudo -E bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/${BOOTSTRAP_BRANCH}/setup.sh)\""
@@ -251,6 +251,10 @@ request_backend_branch(){
   whiptailInput "BACKEND_BRANCH" "Backend branch" "Define backend branch for AviaTX repos." 8 78
 }
 
+request_bootstrap_branch(){
+  whiptailInput "BOOTSTRAP_BRANCH" "Backend branch" "Define backend branch for AviaTX repos." 8 78
+}
+
 request_registry_password(){
   whiptailInput "REGISTRY_PASSWORD" "Container registry" "Define registry password for AviaTX repos." 8 78
 }
@@ -318,6 +322,7 @@ load_config(){
     BACKEND_DEBUG=$(awk -F "=" '/backend_debug/ {print $2}' $FACT_CONF)
     FRONTEND_BRANCH=$(awk -F "=" '/frontend_branch/ {print $2}' $FACT_CONF)
     BACKEND_BRANCH=$(awk -F "=" '/backend_branch/ {print $2}' $FACT_CONF)
+    BOOTSTRAP_BRANCH=$(awk -F "=" '/bootstrap_branch/ {print $2}' $FACT_CONF)
     REGISTRY_PASSWORD=$(awk -F "=" '/registry_password/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
@@ -347,6 +352,7 @@ ssl_test=${SSL_TEST}
 backend_debug=${BACKEND_DEBUG}
 frontend_branch=${FRONTEND_BRANCH}
 backend_branch=${BACKEND_BRANCH}
+BOOTSTRAP_BRANCH=${BOOTSTRAP_BRANCH}
 registry_password=${REGISTRY_PASSWORD}
 docker_gid=$(getent group docker | cut -d: -f3)
 installed=${INSTALLED}""" > $FACT_CONF
@@ -387,6 +393,8 @@ initialize(){
   done
   while [ -z "${FRONTEND_BRANCH// }" ]; do request_frontend_branch
   done
+  while [ -z "${BOOTSTRAP_BRANCH// }" ]; do request_bootstrap_branch
+  done
   while [ -z "${BACKEND_BRANCH// }" ]; do request_backend_branch
   done
   while [ -z "${REGISTRY_PASSWORD// }" ]; do request_registry_password
@@ -420,7 +428,8 @@ menu() {
   "16" "    Change Backend DEBUG mode '${BACKEND_DEBUG}'" \
   "17" "    Change frontend branch '${FRONTEND_BRANCH}'" \
   "18" "    Change backend branch '${BACKEND_BRANCH}'" \
-  "19" "    Change registry password" \
+  "19" "    Change bootstrap branch '${BOOTSTRAP_BRANCH}'" \
+  "20" "    Change registry password" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -440,7 +449,8 @@ menu() {
     "16") request_backend_debug ;;
     "17") request_frontend_branch ;;
     "18") request_backend_branch ;;
-    "19") request_registry_password ;;
+    "19") request_bootstrap_branch ;;
+    "20") request_registry_password ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac

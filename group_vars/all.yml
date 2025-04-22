@@ -1,6 +1,6 @@
 # playbook version fill automatically
 playbook_version: 3.11.0
-branch: master
+branch: "{{_local_config.bootstrap_branch|default('master')}}"
 # system users
 _uid: root
 _gid: root
