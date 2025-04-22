@@ -94,13 +94,6 @@
         dest: "{{envs_dir}}/.env.django.prod"
       tags: ["full", "upgradebackend"]
 
-    # env_django.asgi.yml.j2 for ASGI
-    - name: Set backend ASGI env variables
-      template:
-        src: "templates/env_django.asgi.yml.j2"
-        dest: "{{envs_dir}}/.env.django.asgi.prod"
-      tags: ["full", "upgradebackend"]
-
     - name: Set frontend env variables
       template:
         src: "templates/env_nuxtjs.yml.j2"
@@ -166,7 +159,7 @@
       tags: ["upgradefrontend"]
 
     - name: Upgrade backend container
-      command: docker-compose up -d --force-recreate django django-asgi celery celery-beat
+      command: docker-compose up -d --force-recreate django celery celery-beat
       args:
         chdir: "{{bootstrap_dir}}"
       tags: ["upgradebackend"]
