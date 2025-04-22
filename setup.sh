@@ -4,7 +4,7 @@ VERSION=4.0.8
 if [ -a "$FACT_CONF" ]; then
   BOOTSTRAP_BRANCH=$(awk -F "=" '/bootstrap_branch/ {print $2}' $FACT_CONF)
 else
-  BOOTSTRAP_BRANCH=master
+  BOOTSTRAP_BRANCH=dev # change only if you know what you are doing
 fi
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
