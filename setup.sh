@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-VERSION=4.0.8
-BOOTSTRAP_BRANCH=dev
+VERSION=5.0.1
+BOOTSTRAP_BRANCH=master
 BOOTSTRAP_DIR=/srv/aviatx/bootstrap
 BOOTSTRAP_REPO=https://github.com/andrewromm/aviatx_setup.git
 KICKSTART_CMD="sudo -E bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/andrewromm/aviatx_setup/${BOOTSTRAP_BRANCH}/setup.sh)\""
