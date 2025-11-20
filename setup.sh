@@ -9,8 +9,8 @@ BINALIAS=/usr/local/bin/aviatx
 FACT_CONF=/etc/ansible/facts.d/config.fact
 INSTALL_LOG=$(mktemp /tmp/aviatx-setup.XXXXXXXX)
 CUSTOM_TASKS_FILE=tasks/custom.yml
-FRONTEND_BRANCH=main
-BACKEND_BRANCH=main
+FRONTEND_BRANCH=stable
+BACKEND_BRANCH=stable
 REGISTRY_PASSWORD=""
 
 # state vars

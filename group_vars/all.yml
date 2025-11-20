@@ -40,8 +40,8 @@ _git_organization: git@github.com:andrewromm
 repos:
   frontend: "{{_git_organization}}/aviatx_frontend.git"
   backend: "{{_git_organization}}/aviatx_backend.git"
-  frontend_branch: "{{_local_config.frontend_branch|default('main')}}"
-  backend_branch: "{{_local_config.backend_branch|default('main')}}"
+  frontend_branch: "{{_local_config.frontend_branch|default('stable')}}"
+  backend_branch: "{{_local_config.backend_branch|default('stable')}}"
 registry:
   url: cr.selcloud.ru
   username: token
