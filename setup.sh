@@ -23,6 +23,7 @@ PG_USER=""
 PG_PASSWORD=""
 SSL_TEST="false"
 BACKEND_DEBUG=0
+BACKEND_SECRET_KEY=""
 
 ROLES_UPDATED=0
 
@@ -259,6 +260,14 @@ request_registry_password(){
   whiptailInput "REGISTRY_PASSWORD" "Container registry" "Define registry password for AviaTX repos." 8 78
 }
 
+generate_backend_secret_key(){
+  if [ -z "${BACKEND_SECRET_KEY// }" ]; then
+    print_status "Generating Django SECRET_KEY"
+    BACKEND_SECRET_KEY=$(openssl rand -base64 50 | tr -d '\n')
+    print_ok
+  fi
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -320,6 +329,7 @@ load_config(){
     PG_PASSWORD=$(awk -F "=" '/pg_password/ {print $2}' $FACT_CONF)
     SSL_TEST=$(awk -F "=" '/ssl_test/ {print $2}' $FACT_CONF)
     BACKEND_DEBUG=$(awk -F "=" '/backend_debug/ {print $2}' $FACT_CONF)
+    BACKEND_SECRET_KEY=$(awk -F "=" '/backend_secret_key/ {print $2}' $FACT_CONF)
     FRONTEND_BRANCH=$(awk -F "=" '/frontend_branch/ {print $2}' $FACT_CONF)
     BACKEND_BRANCH=$(awk -F "=" '/backend_branch/ {print $2}' $FACT_CONF)
     BOOTSTRAP_BRANCH=$(awk -F "=" '/bootstrap_branch/ {print $2}' $FACT_CONF)
@@ -356,6 +366,7 @@ pg_user=${PG_USER}
 pg_password=${PG_PASSWORD}
 ssl_test=${SSL_TEST}
 backend_debug=${BACKEND_DEBUG}
+backend_secret_key=${BACKEND_SECRET_KEY}
 frontend_branch=${FRONTEND_BRANCH}
 backend_branch=${BACKEND_BRANCH}
 bootstrap_branch=${BOOTSTRAP_BRANCH}
@@ -378,6 +389,7 @@ setup_platform(){
   setup_runner
   setup_playbook
   INSTALLED=$VERSION
+  generate_backend_secret_key
   save_config
 }
 
