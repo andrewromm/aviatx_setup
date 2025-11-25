@@ -297,6 +297,9 @@ run_postgresql_setup() { # (tags, custom)
 }
 
 run_platform_playbook() { # (tags, custom)
+  # Ensure BACKEND_SECRET_KEY is generated before deployment
+  generate_backend_secret_key
+  save_config
   print_status "Remove all docker images"
   cmd="docker stop \$(docker ps -a -q) && docker rm \$(docker ps -a -q)"
   cmd="docker rmi -f \$(docker images -q)"
