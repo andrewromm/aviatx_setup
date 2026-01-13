@@ -12,6 +12,10 @@ CUSTOM_TASKS_FILE=tasks/custom.yml
 FRONTEND_BRANCH=main
 BACKEND_BRANCH=main
 REGISTRY_PASSWORD=""
+MQ_QUEUE_NAME=""
+MQ_HOST=""
+MQ_USER=""
+MQ_PASSWORD=""
 
 # state vars
 INSTALLED=""
@@ -259,6 +263,22 @@ request_registry_password(){
   whiptailInput "REGISTRY_PASSWORD" "Container registry" "Define registry password for AviaTX repos." 8 78
 }
 
+request_mq_queue_name(){
+  whiptailInput "MQ_QUEUE_NAME" "MQ Queue Name" "Define message queue name." 8 78
+}
+
+request_mq_host(){
+  whiptailInput "MQ_HOST" "MQ Host" "Define message queue host address." 8 78
+}
+
+request_mq_user(){
+  whiptailInput "MQ_USER" "MQ User" "Define message queue user." 8 78
+}
+
+request_mq_password(){
+  whiptailInput "MQ_PASSWORD" "MQ Password" "Define message queue password." 8 78
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -324,6 +344,10 @@ load_config(){
     BACKEND_BRANCH=$(awk -F "=" '/backend_branch/ {print $2}' $FACT_CONF)
     BOOTSTRAP_BRANCH=$(awk -F "=" '/bootstrap_branch/ {print $2}' $FACT_CONF)
     REGISTRY_PASSWORD=$(awk -F "=" '/registry_password/ {print $2}' $FACT_CONF)
+    MQ_QUEUE_NAME=$(awk -F "=" '/mq_queue_name/ {print $2}' $FACT_CONF)
+    MQ_HOST=$(awk -F "=" '/mq_host/ {print $2}' $FACT_CONF)
+    MQ_USER=$(awk -F "=" '/mq_user/ {print $2}' $FACT_CONF)
+    MQ_PASSWORD=$(awk -F "=" '/mq_password/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
   echo "Loaded configuration:"
@@ -360,6 +384,10 @@ frontend_branch=${FRONTEND_BRANCH}
 backend_branch=${BACKEND_BRANCH}
 bootstrap_branch=${BOOTSTRAP_BRANCH}
 registry_password=${REGISTRY_PASSWORD}
+mq_queue_name=${MQ_QUEUE_NAME}
+mq_host=${MQ_HOST}
+mq_user=${MQ_USER}
+mq_password=${MQ_PASSWORD}
 docker_gid=$(getent group docker | cut -d: -f3)
 installed=${INSTALLED}""" > $FACT_CONF
 }
@@ -405,6 +433,14 @@ initialize(){
   done
   while [ -z "${REGISTRY_PASSWORD// }" ]; do request_registry_password
   done
+  while [ -z "${MQ_QUEUE_NAME// }" ]; do request_mq_queue_name
+  done
+  while [ -z "${MQ_HOST// }" ]; do request_mq_host
+  done
+  while [ -z "${MQ_USER// }" ]; do request_mq_user
+  done
+  while [ -z "${MQ_PASSWORD// }" ]; do request_mq_password
+  done
 }
 
 if [[ -a "$FACT_CONF" ]]; then
@@ -436,6 +472,10 @@ menu() {
   "18" "    Change backend branch '${BACKEND_BRANCH}'" \
   "19" "    Change bootstrap branch '${BOOTSTRAP_BRANCH}'" \
   "20" "    Change registry password" \
+  "21" "    Change MQ Queue Name '${MQ_QUEUE_NAME}'" \
+  "22" "    Change MQ Host '${MQ_HOST}'" \
+  "23" "    Change MQ User '${MQ_USER}'" \
+  "24" "    Change MQ Password" \
   "00" "    Exit"  3>&1 1>&2 2>&3)
   EXITCODE=$?
   [[ "$EXITCODE" = 1 ]] && break;
@@ -457,6 +497,10 @@ menu() {
     "18") request_backend_branch ;;
     "19") request_bootstrap_branch ;;
     "20") request_registry_password ;;
+    "21") request_mq_queue_name ;;
+    "22") request_mq_host ;;
+    "23") request_mq_user ;;
+    "24") request_mq_password ;;
     "00") exit 0 ;;
     *) echo "Unknown action '${OPTION}'" ;;	
   esac

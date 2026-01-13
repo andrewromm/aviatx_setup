@@ -14,6 +14,11 @@ _backend_debug: "{{_local_config.backend_debug|default('0')}}"
 # need to generate through setup
 _backend_secret_key: "b#5wk1l%3yf(3mab)qkp4^6x$(+&y1hri#c@7scl#k*j%skfj#"
 _celery_broker: "redis://redis:6379/0"
+# ########## Message Queue ##########
+_mq_queue_name: "{{_local_config.mq_queue_name|default('')}}"
+_mq_host: "{{_local_config.mq_host|default('')}}"
+_mq_user: "{{_local_config.mq_user|default('')}}"
+_mq_password: "{{_local_config.mq_password|default('')}}"
 # ########## Features ##########
 setup_server: yes
 # ########## Domains ##########
