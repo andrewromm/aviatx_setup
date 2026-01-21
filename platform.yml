@@ -159,6 +159,7 @@
       docker_compose:
         project_src: "{{bootstrap_dir}}"
         recreate: smart
+        remove_orphans: yes
       tags: ["full"]
 
     #### if tag == "upgrade" recompile only containers django and nuxtjs
