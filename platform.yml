@@ -152,6 +152,7 @@
         project_src: "{{bootstrap_dir}}"
         state: absent
         remove_images: all
+        remove_orphans: yes
       tags: ["full"]
 
     - name: Create and start services
