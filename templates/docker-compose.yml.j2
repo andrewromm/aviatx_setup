@@ -92,7 +92,7 @@ services:
     volumes:
       - static_volume:/home/app/web/backend/static
       - media_volume:/home/app/web/backend/media
-      - certs:/etc/nginx/certs
+      - {{ssl_certs_dir}}:/etc/nginx/certs:ro
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
@@ -101,21 +101,6 @@ services:
       - 80:80
     depends_on:
       - nuxtjs
-
-  nginx-proxy-letsencrypt:
-    container_name: letsencrypt
-    image: jrcs/letsencrypt-nginx-proxy-companion:2.2
-    restart: always
-    env_file:
-      - {{envs_dir}}/.env.proxy.prod
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - certs:/etc/nginx/certs
-      - html:/usr/share/nginx/html
-      - vhost:/etc/nginx/vhost.d
-      - acme:/etc/acme.sh
-    depends_on:
-      - nginx-proxy
 
   zabbix-agent:
     container_name: zabbix-agent
@@ -136,7 +121,5 @@ volumes:
   static_volume:
   media_volume:
     external: true
-  certs:
   html:
   vhost:
-  acme:

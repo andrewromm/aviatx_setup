@@ -21,9 +21,11 @@ DOMAIN=""
 HOSTALIAS=""
 PG_USER=""
 PG_PASSWORD=""
-SSL_TEST="false"
 BACKEND_DEBUG=0
 BACKEND_SECRET_KEY=""
+
+# SSL configuration
+SSL_CERTS_DIR="/srv/aviatx/ssl"
 
 ROLES_UPDATED=0
 
@@ -236,8 +238,28 @@ request_pg_password(){
   whiptailInput "PG_PASSWORD" "Postgres password" "Define postgreSQL password" 8 78
 }
 
-request_ssl_test(){
-  whiptailInput "SSL_TEST" "If SSL test mode" "Select if receive test Letsencrypt SSL certificate." 8 78
+# SSL certificate check function
+check_ssl_certs() {
+  local cert_file="${SSL_CERTS_DIR}/${DOMAIN}.crt"
+  local key_file="${SSL_CERTS_DIR}/${DOMAIN}.key"
+  
+  if [[ ! -f "$cert_file" ]]; then
+    print_error "SSL certificate not found: $cert_file"
+    print_error "Please copy your wildcard certificate to ${SSL_CERTS_DIR}/"
+    print_error "See docs/SSL_WILDCARD_MIGRATION.md for instructions"
+    return 1
+  fi
+  
+  if [[ ! -f "$key_file" ]]; then
+    print_error "SSL private key not found: $key_file"
+    print_error "Please copy your wildcard private key to ${SSL_CERTS_DIR}/"
+    print_error "See docs/SSL_WILDCARD_MIGRATION.md for instructions"
+    return 1
+  fi
+  
+  print_status "SSL certificates found"
+  print_ok
+  return 0
 }
 
 request_backend_debug(){
@@ -297,6 +319,10 @@ run_postgresql_setup() { # (tags, custom)
 }
 
 run_platform_playbook() { # (tags, custom)
+  # Check SSL certificates for full install
+  if [[ "$1" == "full" ]]; then
+    check_ssl_certs || return 1
+  fi
   # Ensure BACKEND_SECRET_KEY is generated before deployment
   generate_backend_secret_key
   save_config
@@ -330,7 +356,7 @@ load_config(){
     EMAIL=$(awk -F "=" '/email/ {print $2}' $FACT_CONF)
     PG_USER=$(awk -F "=" '/pg_user/ {print $2}' $FACT_CONF)
     PG_PASSWORD=$(awk -F "=" '/pg_password/ {print $2}' $FACT_CONF)
-    SSL_TEST=$(awk -F "=" '/ssl_test/ {print $2}' $FACT_CONF)
+
     BACKEND_DEBUG=$(awk -F "=" '/backend_debug/ {print $2}' $FACT_CONF)
     BACKEND_SECRET_KEY=$(awk -F "=" '/backend_secret_key/ {print $2}' $FACT_CONF)
     FRONTEND_BRANCH=$(awk -F "=" '/frontend_branch/ {print $2}' $FACT_CONF)
@@ -367,7 +393,6 @@ domain=${DOMAIN}
 hostalias=${HOSTALIAS}
 pg_user=${PG_USER}
 pg_password=${PG_PASSWORD}
-ssl_test=${SSL_TEST}
 backend_debug=${BACKEND_DEBUG}
 backend_secret_key=${BACKEND_SECRET_KEY}
 frontend_branch=${FRONTEND_BRANCH}
@@ -445,7 +470,6 @@ menu() {
   "12" "    Change domain '${DOMAIN}'" \
   "13" "    Change host alias '${HOSTALIAS}'" \
   "14" "    Change Email '${EMAIL}'" \
-  "15" "    Change SSL Letsencrypt test mode '${SSL_TEST}'" \
   "16" "    Change Backend DEBUG mode '${BACKEND_DEBUG}'" \
   "17" "    Change frontend branch '${FRONTEND_BRANCH}'" \
   "18" "    Change backend branch '${BACKEND_BRANCH}'" \
@@ -466,7 +490,6 @@ menu() {
     "12") request_domain ;;
     "13") request_hostalias ;;
     "14") request_email ;;
-    "15") request_ssl_test ;;
     "16") request_backend_debug ;;
     "17") request_frontend_branch ;;
     "18") request_backend_branch ;;

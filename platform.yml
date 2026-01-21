@@ -107,10 +107,18 @@
         dest: "{{envs_dir}}/.env.nuxtjs.prod"
       tags: ["full", "upgradefrontend"]
 
-    - name: Set nginx proxy env variables
-      template:
-        src: "templates/env_proxy.yml.j2"
-        dest: "{{envs_dir}}/.env.proxy.prod"
+    - name: Check SSL certificate exists
+      stat:
+        path: "{{ssl_certs_dir}}/{{_domain}}.crt"
+      register: ssl_cert_check
+      failed_when: not ssl_cert_check.stat.exists
+      tags: ["full"]
+
+    - name: Check SSL private key exists
+      stat:
+        path: "{{ssl_certs_dir}}/{{_domain}}.key"
+      register: ssl_key_check
+      failed_when: not ssl_key_check.stat.exists
       tags: ["full"]
 
     - name: Set zabbix env variables

@@ -34,6 +34,7 @@ create_dirs:
       "{{ fake_db_dir }}",
       "{{ frontend_dir }}",
       "{{ envs_dir }}",
+      "{{ ssl_certs_dir }}",
     ]
 # ########## repos ##########
 _git_organization: git@github.com:andrewromm
@@ -47,7 +48,7 @@ registry:
   username: token
   password: "{{_local_config.registry_password|default('')}}"
 # ########## ssl ##########
-_letsencrypt_test: "{{_local_config.ssl_test|default('true')}}"
+ssl_certs_dir: "/srv/aviatx/ssl"
 # ########## postgress ##########
 _pg: 1
 _pg_db: aviatx
