@@ -3,6 +3,11 @@ location /static/ {
   add_header Access-Control-Allow-Origin *;
 }
 
+location /media/data_transfer/ {
+  deny all;
+  return 403;
+}
+
 location /media/ {
   alias /home/app/web/backend/media/;
   add_header Access-Control-Allow-Origin *;
