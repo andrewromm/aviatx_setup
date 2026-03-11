@@ -165,9 +165,16 @@ setup_python_packages() {
 
 setup_runner() {
   print_status "Installing/Updating AviaTX shortcut"
-  rm -f $BINALIAS \
-    && echo -e "#!/bin/bash\ncd ${BOOTSTRAP_DIR} && sudo -E bash setup.sh\n" > $BINALIAS \
-    && chmod +x $BINALIAS \
+  rm -f $BINALIAS
+  cat > $BINALIAS <<'EOF'
+#!/bin/bash
+CONF=/etc/ansible/facts.d/config.fact
+BRANCH=$(awk -F= '/^bootstrap_branch/{print $2}' "$CONF" 2>/dev/null)
+BRANCH=${BRANCH:-master}
+REPO=https://raw.githubusercontent.com/andrewromm/aviatx_setup
+sudo -E bash -c "$(curl -fsSL "${REPO}/${BRANCH}/setup.sh")"
+EOF
+  chmod +x $BINALIAS \
     && print_ok
 }
 
