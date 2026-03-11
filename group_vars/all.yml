@@ -13,8 +13,8 @@ _backend_port: "8000"
 _backend_debug: "{{_local_config.backend_debug|default('0')}}"
 # Generated automatically during first setup with openssl rand -base64 50
 _backend_secret_key: "{{_local_config.backend_secret_key|default('INSECURE_DEFAULT_KEY_CHANGE_ME')}}"
-_redis_password: "{{_local_config.redis_password}}"
-_celery_broker: "redis://:{{_redis_password}}@redis:6379/0"
+_redis_password: "{{_local_config.redis_password|default('')}}"
+_celery_broker: "{% if _redis_password %}redis://:{{_redis_password}}@redis:6379/0{% else %}redis://redis:6379/0{% endif %}"
 # ########## Features ##########
 setup_server: yes
 # ########## Domains ##########
