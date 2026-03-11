@@ -37,6 +37,7 @@ services:
     container_name: redis
     image: redis:alpine
     restart: always
+    command: redis-server --requirepass {{_redis_password}}
 
   celery:
     container_name: celery

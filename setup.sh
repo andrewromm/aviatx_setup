@@ -23,6 +23,7 @@ PG_USER=""
 PG_PASSWORD=""
 BACKEND_DEBUG=0
 BACKEND_SECRET_KEY=""
+REDIS_PASSWORD=""
 
 # SSL configuration
 SSL_CERTS_DIR="/srv/aviatx/ssl"
@@ -290,6 +291,14 @@ generate_backend_secret_key(){
   fi
 }
 
+generate_redis_password(){
+  if [ -z "${REDIS_PASSWORD// }" ]; then
+    print_status "Generating Redis password"
+    REDIS_PASSWORD=$(openssl rand -base64 32 | tr -d '\n')
+    print_ok
+  fi
+}
+
 update_reboot_dialog(){
   show_dialog "System upgrade" "After upgrade complete server will be rebooted and you need to connect agant to continue."
 }
@@ -325,6 +334,7 @@ run_platform_playbook() { # (tags, custom)
   fi
   # Ensure BACKEND_SECRET_KEY is generated before deployment
   generate_backend_secret_key
+  generate_redis_password
   save_config
   print_status "Remove all docker images"
   cmd="docker stop \$(docker ps -a -q) && docker rm \$(docker ps -a -q)"
@@ -363,6 +373,7 @@ load_config(){
     BACKEND_BRANCH=$(awk -F "=" '/backend_branch/ {print $2}' $FACT_CONF)
     BOOTSTRAP_BRANCH=$(awk -F "=" '/bootstrap_branch/ {print $2}' $FACT_CONF)
     REGISTRY_PASSWORD=$(awk -F "=" '/registry_password/ {print $2}' $FACT_CONF)
+    REDIS_PASSWORD=$(awk -F "=" '/redis_password/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
   echo "Loaded configuration:"
@@ -399,6 +410,7 @@ frontend_branch=${FRONTEND_BRANCH}
 backend_branch=${BACKEND_BRANCH}
 bootstrap_branch=${BOOTSTRAP_BRANCH}
 registry_password=${REGISTRY_PASSWORD}
+redis_password=${REDIS_PASSWORD}
 docker_gid=$(getent group docker | cut -d: -f3)
 installed=${INSTALLED}""" > $FACT_CONF
 }
@@ -418,6 +430,7 @@ setup_platform(){
   setup_playbook
   INSTALLED=$VERSION
   generate_backend_secret_key
+  generate_redis_password
   save_config
 }
 
