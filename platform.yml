@@ -30,12 +30,13 @@
     - name: Check if PostgreSQL db is accessible
       become: yes
       become_user: postgres
-      postgresql_info:
-        filter:
-          - databases
-      register: pg_result
-      failed_when: _pg_db not in pg_result.databases.keys()
+      changed_when: false
+      ansible.builtin.command:
+        cmd: psql -d "{{ _pg_db }}" -c "SELECT 1"
+      register: pg_check
+      failed_when: pg_check.rc != 0
       tags: ["full"]
+
 
     ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### #####
 
