@@ -301,7 +301,7 @@ generate_backend_secret_key(){
 generate_redis_password(){
   if [ -z "${REDIS_PASSWORD// }" ]; then
     print_status "Generating Redis password"
-    REDIS_PASSWORD=$(openssl rand -base64 32 | tr -d '\n')
+    REDIS_PASSWORD=$(openssl rand -hex 32)
     print_ok
   fi
 }
