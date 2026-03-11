@@ -88,22 +88,40 @@ services:
       - django
       - django-asgi
 
+  docker-socket-proxy:
+    container_name: docker-socket-proxy
+    image: tecnativa/docker-socket-proxy:latest
+    restart: always
+    environment:
+      CONTAINERS: 1
+      EVENTS: 1
+      POST: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - socket-proxy
+
   nginx-proxy:
     container_name: nginx-proxy
     build: {{bootstrap_dir}}/nginx
     restart: always
+    environment:
+      DOCKER_HOST: tcp://docker-socket-proxy:2375
     volumes:
       - static_volume:/home/app/web/backend/static
       - media_volume:/home/app/web/backend/media
       - {{ssl_certs_dir}}:/etc/nginx/certs:ro
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
-      - /var/run/docker.sock:/tmp/docker.sock:ro
     ports:
       - 443:443
       - 80:80
     depends_on:
       - nuxtjs
+      - docker-socket-proxy
+    networks:
+      - default
+      - socket-proxy
 
   zabbix-agent:
     container_name: zabbix-agent
@@ -123,3 +141,8 @@ volumes:
     external: true
   html:
   vhost:
+
+networks:
+  default:
+  socket-proxy:
+    internal: true
