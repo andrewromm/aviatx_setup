@@ -166,7 +166,7 @@ setup_python_packages() {
 setup_runner() {
   print_status "Installing/Updating AviaTX shortcut"
   rm -f $BINALIAS \
-    && echo -e "#!/bin/bash\n${KICKSTART_CMD}\n" > $BINALIAS \
+    && echo -e "#!/bin/bash\ncd ${BOOTSTRAP_DIR} && sudo -E bash setup.sh\n" > $BINALIAS \
     && chmod +x $BINALIAS \
     && print_ok
 }
