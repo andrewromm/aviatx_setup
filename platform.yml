@@ -139,34 +139,44 @@
         dest: "{{bootstrap_dir}}/docker-compose.yml"
       tags: ["full", "upgradefrontend", "upgradebackend"]
 
-    - name: Tear down existing services
-      docker_compose:
+    - name: Tear down existing services (compose v2)
+      community.docker.docker_compose_v2:
         project_src: "{{bootstrap_dir}}"
         state: absent
         remove_images: all
       tags: ["full"]
 
-    - name: Create and start services
-      docker_compose:
+    - name: Create and start services (compose v2)
+      community.docker.docker_compose_v2:
         project_src: "{{bootstrap_dir}}"
-        recreate: smart
+        state: present
+        recreate: always
       tags: ["full"]
 
     #### if tag == "upgrade" recompile only containers django and nuxtjs
-    - name: Pull new repositories
-      command: docker-compose pull
-      args:
-        chdir: "{{bootstrap_dir}}"
+    - name: Pull new repositories (compose v2)
+      community.docker.docker_compose_v2:
+        project_src: "{{bootstrap_dir}}"
+        pull: always
       tags: ["upgradefrontend", "upgradebackend"]
 
-    - name: Upgrade frontend container
-      command: docker-compose up -d --force-recreate nuxtjs
-      args:
-        chdir: "{{bootstrap_dir}}"
+    - name: Upgrade frontend container (compose v2)
+      community.docker.docker_compose_v2:
+        project_src: "{{bootstrap_dir}}"
+        services:
+          - nuxtjs
+        state: present
+        recreate: always
       tags: ["upgradefrontend"]
 
-    - name: Upgrade backend container
-      command: docker-compose up -d --force-recreate django django-asgi celery celery-beat
-      args:
-        chdir: "{{bootstrap_dir}}"
+    - name: Upgrade backend containers (compose v2)
+      community.docker.docker_compose_v2:
+        project_src: "{{bootstrap_dir}}"
+        services:
+          - django
+          - django-asgi
+          - celery
+          - celery-beat
+        state: present
+        recreate: always
       tags: ["upgradebackend"]
