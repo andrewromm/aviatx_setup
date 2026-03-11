@@ -113,12 +113,9 @@ services:
     env_file:
       - {{envs_dir}}/.env.zabbix.prod
     volumes:
-      - /:/host:ro
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
     network_mode: host
-    privileged: true
-    group_add:
-      - {{_docker_gid}}
 
 volumes:
   static_volume:

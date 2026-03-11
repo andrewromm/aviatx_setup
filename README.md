@@ -24,6 +24,14 @@ cd /var/lib/postgresql/
 export DOCKER_GROUP_ID=$(getent group docker | cut -d: -f3)
 
 
+## SSH Host Keys
+
+`host_key_checking` is enabled in `ansible.cfg`. Before first deploy to a new server, add its SSH fingerprint to known_hosts:
+
+```bash
+ssh-keyscan -H <server-ip> >> ~/.ssh/known_hosts
+```
+
 ## ZABBIX
 
 grep zabbix /etc/group
