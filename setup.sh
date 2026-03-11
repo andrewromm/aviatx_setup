@@ -13,6 +13,13 @@ FRONTEND_BRANCH=stable
 BACKEND_BRANCH=stable
 REGISTRY_PASSWORD=""
 
+# Virtual environment paths
+VENV_DIR=${BOOTSTRAP_DIR}/venv
+VENV_PYTHON=${VENV_DIR}/bin/python3
+VENV_PIP=${VENV_DIR}/bin/pip
+VENV_ANSIBLE_PLAYBOOK=${VENV_DIR}/bin/ansible-playbook
+VENV_ANSIBLE_GALAXY=${VENV_DIR}/bin/ansible-galaxy
+
 # state vars
 INSTALLED=""
 EMAIL=""
@@ -148,16 +155,48 @@ setup_system_packages() {
     && apt-get -yqq install dialog whiptail nano \
       curl git locales \
       python3 python3-dev python3-pip python3-netaddr python3-setuptools python3-requests \
+      python3-venv \
       build-essential libffi-dev ca-certificates zlib1g-dev libssl-dev openssl > $INSTALL_LOG \
     && print_ok
 }
 
+setup_virtualenv() {
+  print_status "Creating virtual environment in ${VENV_DIR}"
+  
+  # Remove old venv if exists
+  if [ -d "$VENV_DIR" ]; then
+    rm -rf $VENV_DIR
+  fi
+  
+  # Create new virtual environment
+  python3 -m venv $VENV_DIR
+  
+  if [ ! -f "$VENV_PIP" ]; then
+    print_error "Failed to create virtual environment"
+    exit 1
+  fi
+  
+  print_ok
+}
+
 setup_python_packages() {
-  print_status "Update pip and install required python packages"
-  python3 -m pip install --upgrade pip \
-    && pip3 -q install wheel \
-    && pip3 -q install -r $BOOTSTRAP_DIR/requirements.txt -U \
-    && print_ok
+  print_status "Installing python packages in virtual environment"
+  
+  # Update pip in virtual environment
+  $VENV_PIP install --upgrade pip
+  
+  # Install required packages
+  $VENV_PIP install wheel
+  
+  if [ -f "$BOOTSTRAP_DIR/requirements.txt" ]; then
+    $VENV_PIP install -r $BOOTSTRAP_DIR/requirements.txt -U
+  fi
+  
+  # Create symlinks for ansible commands to make them available system-wide
+  # This is needed because the script calls ansible-playbook directly
+  ln -sf ${VENV_DIR}/bin/ansible* /usr/local/bin/
+  
+  print_ok
 }
 
 setup_runner() {
@@ -388,6 +427,7 @@ setup_platform(){
   setup_system_packages
   setup_locale
   update_bootstrap
+  setup_virtualenv
   setup_python_packages
   setup_runner
   setup_playbook
