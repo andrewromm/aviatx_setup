@@ -328,14 +328,14 @@ run_postgresql_setup() { # (tags, custom)
 }
 
 run_platform_playbook() { # (tags, custom)
+  # Ensure secrets are generated and saved before anything else
+  generate_backend_secret_key
+  generate_redis_password
+  save_config
   # Check SSL certificates for full install
   if [[ "$1" == "full" ]]; then
     check_ssl_certs || return 1
   fi
-  # Ensure BACKEND_SECRET_KEY is generated before deployment
-  generate_backend_secret_key
-  generate_redis_password
-  save_config
   print_status "Remove all docker images"
   cmd="docker stop \$(docker ps -a -q) && docker rm \$(docker ps -a -q)"
   cmd="docker rmi -f \$(docker images -q)"
