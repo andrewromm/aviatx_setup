@@ -12,7 +12,7 @@ _frontend_port: "3000"
 _backend_port: "8000"
 _backend_debug: "{{_local_config.backend_debug|default('0')}}"
 # Generated automatically during first setup with openssl rand -base64 50
-_backend_secret_key: "{{_local_config.backend_secret_key|default('INSECURE_DEFAULT_KEY_CHANGE_ME')}}"
+_backend_secret_key: "{{_local_config.backend_secret_key}}"
 _redis_password: "{{_local_config.redis_password|default('')}}"
 _celery_broker: "{% if _redis_password %}redis://:{{_redis_password}}@redis:6379/0{% else %}redis://redis:6379/0{% endif %}"
 # ########## Features ##########
@@ -53,7 +53,7 @@ ssl_certs_dir: "/srv/aviatx/ssl"
 # ########## postgress ##########
 _pg: 1
 _pg_db: aviatx
-_pg_user: "{{_local_config.pg_user|default('user')}}"
-_pg_password: "{{_local_config.pg_password|default('password')}}"
+_pg_user: "{{_local_config.pg_user}}"
+_pg_password: "{{_local_config.pg_password}}"
 # ########## Docker groupd GID ##########
 _docker_gid: "{{_local_config.docker_gid}}"
