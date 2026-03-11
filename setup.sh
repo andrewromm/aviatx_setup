@@ -396,9 +396,9 @@ ${HOSTALIAS}
 }
 
 save_config(){
-  save_inventory \
-  && mkdir -p $(dirname $FACT_CONF) \
-  && echo """[general]
+  save_inventory
+  mkdir -p $(dirname $FACT_CONF)
+  echo """[general]
 email=${EMAIL}
 domain=${DOMAIN}
 hostalias=${HOSTALIAS}
