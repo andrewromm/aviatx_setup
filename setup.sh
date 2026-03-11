@@ -373,7 +373,7 @@ load_config(){
     BACKEND_BRANCH=$(awk -F "=" '/backend_branch/ {print $2}' $FACT_CONF)
     BOOTSTRAP_BRANCH=$(awk -F "=" '/bootstrap_branch/ {print $2}' $FACT_CONF)
     REGISTRY_PASSWORD=$(awk -F "=" '/registry_password/ {print $2}' $FACT_CONF)
-    REDIS_PASSWORD=$(awk -F "=" '/redis_password/ {print $2}' $FACT_CONF)
+    REDIS_PASSWORD=$(awk -F "=" '/^redis_password/ {print $2}' $FACT_CONF)
     # if [[ -z "$HOSTALIAS" ]]; then HOSTALIAS=$DEF_HOSTALIAS; fi
   fi
   echo "Loaded configuration:"
