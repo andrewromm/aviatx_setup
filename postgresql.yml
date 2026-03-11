@@ -14,6 +14,7 @@
             - local   all  all                 peer
             - host    all  all 127.0.0.1/32    scram-sha-256
             - host    all  all 172.16.0.0/12   scram-sha-256
+            - host    all  all 192.168.0.0/16  scram-sha-256
           postgresql_conf:
             - listen_addresses: "'localhost,172.17.0.1'"
         include_role:
