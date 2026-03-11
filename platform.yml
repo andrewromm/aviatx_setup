@@ -37,6 +37,15 @@
       failed_when: _pg_db not in pg_result.databases.keys()
       tags: ["full"]
 
+    - name: Create .pgpass for root (used by pg_dump cron)
+      copy:
+        content: "localhost:5432:{{_pg_db}}:{{_pg_user}}:{{_pg_password}}"
+        dest: /root/.pgpass
+        owner: root
+        group: root
+        mode: "0600"
+      tags: ["full"]
+
     ##### ##### ##### ##### #####    Docker    ##### ##### ##### ##### #####
 
     - name: Add Docker GPG apt Key
